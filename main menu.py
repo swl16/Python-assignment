@@ -1,16 +1,21 @@
 from tkinter import *
 from tkinter import messagebox
 
-userfile = "C:\Users\WEI LI\OneDrive\Desktop\STUDY\SEM 2\Python Assignment\user.txt"
+userfile = "user.txt"
 def saveuser(username, password):
-    with open(userfile, "a") as f:
+    with open(userfile, "w") as f:
         f.write(f"{username},{password}\n")
+    print("User saved successfully.")
 
 with open(userfile, "r") as f:
     users = [line.strip().split(",")[0] for line in f.readlines()]
 
+def loadusers():
+    with open (userfile,"r") as f:
+        return f.readlines()
+
 def registerwindow():
-    def submit_registration():
+    def register():
         username = entry_username.get()
         password = entry_password.get()
 
@@ -36,5 +41,31 @@ def registerwindow():
     entry_password = Entry(reg_window, show="*")
     entry_password.grid(row=1, column=1)
 
-    Button(reg_window, text="Register", command=submit_registration).grid(row=2, columnspan=2)
+    Button(reg_window, text="Register", command=register).grid(row=2, columnspan=2)
 
+def login(username,password):
+    username = str(input("Enter username: "))
+    password = str(input("Enter password: "))
+
+    if username in users and users[username] == password:
+        print("Success", "Login successful!")
+    else:
+        print("Error", "Invalid username or password!")
+
+
+
+    
+
+
+def run():
+    username = str(input("Enter username: "))
+    password = str(input("Enter password: "))
+    saveuser(username, password)
+    print("Username: ", username)
+    print("Password: ", password)
+    
+    print("LOGIN")
+    login(username, password)
+
+
+run()
