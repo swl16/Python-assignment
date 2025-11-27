@@ -2,17 +2,20 @@ from tkinter import *
 from tkinter import messagebox
 
 userfile = "user.txt"
-def saveuser(username, password):
-    with open(userfile, "w") as f:
+def saveuser(username,password):
+    with open(userfile,"a") as f:
         f.write(f"{username},{password}\n")
-    print("User saved successfully.")
-
-with open(userfile, "r") as f:
-    users = [line.strip().split(",")[0] for line in f.readlines()]
 
 def loadusers():
-    with open (userfile,"r") as f:
-        return f.readlines()
+  data = {}
+  try:
+   with open(userfile,"r")as f:
+    for line in f:
+      username, password = line.strip().split(",")
+      data[username] = password
+  except FileNotFoundError:
+      pass
+  return data
 
 def registerwindow():
     def register():

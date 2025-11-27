@@ -16,33 +16,40 @@ def loadusers():
   return data
 
 def register(users):
+ while True:
+   username = str(input("Enter new username: "))
+   password = str(input("Enter new password: "))
 
-    while True:
-        username = str(input("Enter new username: "))
-        password = str(input("Enter new password: "))
+   users.update(loadusers())
 
-        if username in users:
-           print("Username already exists! Please change another username.")
-        elif username == "" or password == "":
-           print("Username or password cannot be empty!")
-        else:
-           saveuser(username, password)
-           print("Registration successful!")
-           break
+   if username in users:
+    print("Username already exists! Please change another username.")
+   elif username == "" or password == "":
+    print("Username or password cannot be empty!")
+   else:
+    saveuser(username, password)
+    print("Registration successful!")
+    break
 
 def login(users):
-    while True:
-      username = str(input("Enter username: "))
-      password = str(input("Enter password: "))
-      if username in users and users[username] == password:
-        print("Login successful!")
-        break
-      else:
-        print("Invalid username or password! Please try again.")
+  users.update(loadusers())
+  while True:
+   username = str(input("Enter username: "))
+   password = str(input("Enter password: "))
+   if username in users and users[username] == password:
+    print("Login successful!")
+    break
+   else:
+    print("Invalid username or password! Please try again.")
 
 def run():
+  users = loadusers()
+
   print("REGISTER")
   register(users)
+
+  users = loadusers()
+
   print("LOGIN")
   login(users)
 
@@ -69,5 +76,4 @@ def run():
     case _:
      print("Invalid choice. Please try again.")
             
-users = loadusers()
 run()
