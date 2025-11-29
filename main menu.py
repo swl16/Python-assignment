@@ -20,8 +20,8 @@ def loadusers():
 # register 
 def registerwindow():
    register = tk.Toplevel()
-   register.title = ("REGISTER")
-   register.geometry = ("350x300")
+   register.title("REGISTER")
+   register.geometry("350x300")
 
    tk.Label(register, text = "Register New Account", font=("Arial",16,"bold")).pack(pady=10)
 
@@ -40,15 +40,15 @@ def registerwindow():
        users = loadusers()
 
        if username in users:
-        messagebox.showerror("Username already exists! Please change another username.")
+        messagebox.showerror("Error","Username already exists! Please change another username.")
         return
        elif username == "" or password == "":
-        messagebox.showerror("Username or password cannot be empty!")
+        messagebox.showerror("Error","Username or password cannot be empty!")
         return
        else:
         users[username] = password
-        saveuser(users)
-        messagebox.showinfo("Registration successful!")
+        saveuser(username,password)
+        messagebox.showinfo("Success","Registration successful!")
 
        register.destroy()
 
@@ -56,8 +56,8 @@ def registerwindow():
 
 def mainmenu(username):
   menu = tk.Toplevel()
-  menu.title = ("MAIN MENU")
-  menu.geometry = ("500x650")
+  menu.title("MAIN MENU")
+  menu.geometry("500x650")
 
   tk.Label(menu, text=f"Welcome,{username}!", font=("Arial",18,"bold")).pack(pady=20)
 
@@ -72,8 +72,8 @@ def mainmenu(username):
 
 def loginwindow():
   login = tk.Tk()
-  login.title = ("LOGIN")
-  login.geometry = ("350x300")
+  login.title("LOGIN")
+  login.geometry("350x300")
 
   tk.Label(login, text="Login", font=("Arial",18,"bold")).pack(pady=20)
 
@@ -92,10 +92,10 @@ def loginwindow():
      users = loadusers()
 
      if username in users and users[username] == password:
-      messagebox.showinfo("Login successful!")
+      messagebox.showinfo("Success","Login successful!")
       mainmenu(username)
      else:
-      messagebox.showerror("Invalid username or password! Please try again.")
+      messagebox.showerror("Error","Invalid username or password! Please try again.")
       return
      
   tk.Button(login, text="Login", width=25, command=loginuser).pack(pady=10)
