@@ -4,6 +4,7 @@ from tkcalendar import DateEntry
 from datetime import datetime
 import csv
 import os
+import matplotlib.pyplot
 
 window = Tk()
 Empty_label = None
@@ -224,7 +225,7 @@ def Show_total_expenses():
     for row in data:
         total += float(row[1])
 
-    total_label = Label(total_frame,text=f"Total expenses : RM{total:.2f}",font=('Arial', 15, 'bold'),bg='#7e9aed',fg='white',padx=50,pady=20)
+    total_label = Label(total_frame,text=f"Total expenses : RM{total:.2f}",font=('Arial', 18, 'bold'),bg='#7e9aed',fg='white',relief='ridge', bd=3,padx=40,pady=15)
     total_label.place(anchor='center', relx=0.5, rely=0.5)
 
 def read_expenses():
@@ -451,7 +452,40 @@ def refresh_mainpage():
         Delete_button.pack(side="right",padx=(0,8))
 
 Check_empty_file()
-Show_total_expenses()
 refresh_mainpage()
+
+
+#Statistic
+def Get_month_data():
+    data = read_expenses()
+    month = sorted({datetime.strptime(row[0],"%d/%m/%Y").strftime('%m/%Y') for row in data},reverse=True)
+
+    MonthCombo_combobox['values'] = month
+    if month:
+        if MonthCombo_combobox.get() not in month:
+            MonthCombo_combobox.set(month[0])
+    else:
+        MonthCombo_combobox.set('')
+
+Title_label = Label(Statistic_page,text='Monthly Statistics',font=('Arial', 18, 'bold'), fg='white', bg='#7e9aed',relief='ridge', bd=3, padx=20, pady=15)
+Title_label.pack(fill='x', padx=20, pady=(30,20))
+
+Month_frame = Frame(Statistic_page, bg='#fcf7ed', relief='ridge', bd=2)
+Month_frame.pack(padx=20,pady=(10,40),fill='both',expand=True)
+
+in_frame = Frame(Month_frame,bg='#fcf7ed')
+in_frame.pack(padx=30,pady=30,fill='both',expand=True)
+
+MonthCombo_frame = Frame(in_frame,bg='#fcf7ed')
+MonthCombo_frame.pack(fill='x',pady=(0,20))
+
+MonthCombo_label = Label(MonthCombo_frame,text='Select Month:',font=("Arial", 15,'bold'),fg='black',bg='#fcf7ed')
+MonthCombo_label.pack(side='left')
+
+MonthCombo_combobox = ttk.Combobox(MonthCombo_frame, font=("Arial", 11), width=30,state='readonly')
+Get_month_data()
+MonthCombo_combobox.pack(side='left')
+
+
 
 window.mainloop()
