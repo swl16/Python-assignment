@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from tax import *
 
 userfile = "user.txt"
 def saveuser(username,password):
@@ -23,7 +24,7 @@ def registerwindow():
    register.title("REGISTER")
    register.geometry("350x300")
 
-   tk.Label(register, text = "Register New Account", font=("Arial",16,"bold")).pack(pady=10)
+   tk.Label(register, text = "Register New Account", font=("Arial",18,"bold")).pack(pady=10)
 
    tk.Label(register, text="Username:").pack()
    username_entry = tk.Entry(register, width=30)
@@ -66,7 +67,7 @@ def mainmenu(username):
 
   createbutton("Expense Tracker")
   createbutton("Savings Goal Tracker")
-  createbutton("Simple Tax Estimator")
+  createbutton("Simple Tax Estimator", lambda:taxwindow(username))
   
   tk.Button(menu, text="Logout", font=("Arial",16), width=20, height=2, command=menu.destroy).pack(pady=10)
 
