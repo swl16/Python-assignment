@@ -4,10 +4,11 @@ from tkcalendar import DateEntry
 from datetime import datetime
 import csv
 import os
-import matplotlib.pyplot
+import matplotlib.pyplot as plt
 
 window = Tk()
 Empty_label = None
+Category = ('Food', 'Household', 'Health', 'Beauty', 'Entertainment', 'Other')
 
 def add_new_expenses():
 
@@ -45,9 +46,6 @@ def add_new_expenses():
         refresh_mainpage()
         messagebox.showinfo("Success!", "Your expense is added!")
         back_to_mainmenu()
-
-
-
 
 #window for this page
     expenses = Toplevel(window)
@@ -102,10 +100,7 @@ def add_new_expenses():
     category_label = Label(category_frame,text="Category :",font=("Arial", 15,'bold'),fg='black',bg='#fcf7ed',width=11, anchor='w')
     category_label.pack(side="left")
 
-    category_combobox = ttk.Combobox(category_frame, font=("Arial", 11), width=30)
-
-    category_combobox['values'] = ('Food', 'Household', 'Health', 'Beauty', 'Entertainment', 'Other')
-    category_combobox['state'] = 'readonly'
+    category_combobox = ttk.Combobox(category_frame, font=("Arial", 11), width=30,values=Category,state='readonly')
     category_combobox.set('')
 
     category_combobox.pack(side='left')
@@ -357,10 +352,7 @@ def Edit_expense(index):
                            width=11, anchor='w')
     category_label.pack(side="left")
 
-    category_combobox = ttk.Combobox(category_frame, font=("Arial", 11), width=30)
-
-    category_combobox['values'] = ('Food', 'Household', 'Health', 'Beauty', 'Entertainment', 'Other')
-    category_combobox['state'] = 'readonly'
+    category_combobox = ttk.Combobox(category_frame, font=("Arial", 11), width=30,values=Category,state='readonly')
     category_combobox.set(data[index][2])
 
     category_combobox.pack(side='left')
@@ -480,12 +472,12 @@ MonthCombo_frame = Frame(in_frame,bg='#fcf7ed')
 MonthCombo_frame.pack(fill='x',pady=(0,20))
 
 MonthCombo_label = Label(MonthCombo_frame,text='Select Month:',font=("Arial", 15,'bold'),fg='black',bg='#fcf7ed')
-MonthCombo_label.pack(side='left')
+MonthCombo_label.pack(side='left',padx=(0,40))
 
-MonthCombo_combobox = ttk.Combobox(MonthCombo_frame, font=("Arial", 11), width=30,state='readonly')
+MonthCombo_combobox = ttk.Combobox(MonthCombo_frame, font=("Arial", 11), width=15,state='readonly')
 Get_month_data()
 MonthCombo_combobox.pack(side='left')
 
-
+piechart_label = Category
 
 window.mainloop()
