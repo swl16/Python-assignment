@@ -5,6 +5,7 @@ from datetime import datetime
 import csv
 import os
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 window = Tk()
 Empty_label = None
@@ -192,7 +193,7 @@ main_canvas.pack(side="left", expand=True, fill="both")
 scrollbar.pack(side="right", fill="y")
 
 Button(Mainpage, text='+', font=('Arial', 20, 'bold'), bg='#7e9aed', fg='white', width=3, height=1,
-       command=add_new_expenses).pack(side="bottom", anchor="e", padx=20, pady=20)
+       command=add_new_expenses).pack(side="bottom", anchor="e", padx=20, pady=(10,20))
 
 
 def Check_empty_file():
@@ -447,10 +448,19 @@ Check_empty_file()
 refresh_mainpage()
 
 
+
 #Statistic
 def Get_month_data():
+    pie_data = []
     data = read_expenses()
-    month = sorted({datetime.strptime(row[0],"%d/%m/%Y").strftime('%m/%Y') for row in data},reverse=True)
+
+    for row in data:
+        month = datetime.strptime(row[0],"%d/%m/%Y").strftime('%m/%Y')
+        pie_data.append([month,row[1],row[2]])
+
+    pie_data.sort(key=lambda row: (datetime.strptime(row[0], "%m/%Y")), reverse=True)
+
+    month = [row[0] for row in pie_data]
 
     MonthCombo_combobox['values'] = month
     if month:
@@ -458,6 +468,8 @@ def Get_month_data():
             MonthCombo_combobox.set(month[0])
     else:
         MonthCombo_combobox.set('')
+    return pie_data
+
 
 Title_label = Label(Statistic_page,text='Monthly Statistics',font=('Arial', 18, 'bold'), fg='white', bg='#7e9aed',relief='ridge', bd=3, padx=20, pady=15)
 Title_label.pack(fill='x', padx=20, pady=(30,20))
@@ -478,6 +490,30 @@ MonthCombo_combobox = ttk.Combobox(MonthCombo_frame, font=("Arial", 11), width=1
 Get_month_data()
 MonthCombo_combobox.pack(side='left')
 
-piechart_label = Category
+Month = MonthCombo_combobox.get()
+
+def show_pie_chart(Month):
+    pie_data = Get_month_data()
+    piechart_label = []
+    piechart_sizes = []
+
+    for widget in in_frame.winfo_children():
+        widget.destroy()
+
+    for row in pie_data:
+        if row[0] == Month:
+            piechart_label.append(row[2])
+            piechart_sizes.append(row[1])
+
+    fig, ax = plt.subplots(figsize=(4, 4), dpi=100)
+    ax.pie(piechart_sizes,labels=piechart_label,autopct="%1.1f%%")
+    ax.axis('equal')
+    ax.set_title(f"Expenses for {MonthCombo_combobox.get()}")
+
+    chart = FigureCanvasTkAgg(fig, master=in_frame)
+    chart.draw()
+    chart.get_tk_widget().pack(fill='both', expand=True)
+
+show_pie_chart(Month)
 
 window.mainloop()
