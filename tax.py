@@ -1,45 +1,50 @@
 import tkinter as tk
 from tkinter import messagebox
 
+#from google LHDN Malaysia, latest tax rate 
 TaxRate = (0.0, 0.01, 0.03, 0.06, 0.11, 0.19, 0.25, 0.26, 0.28, 0.30)
 basetax = [5000, 5000, 20000, 35000, 50000, 70000, 100000, 400000, 600000, 2000000]
 fixedtax = (0, 0, 150, 600, 1500, 3700, 9400, 84400, 136400, 528400)
 
+# calculate the income tax balance
 def taxcalculation(chargeable_income):
    if chargeable_income<=0:
       return 0.0
-   remaining_tax = chargeable_income
    taxbalance = 0.0
-   if 0 <= remaining_tax <= 5000:
-      taxbalance = fixedtax[0] + (remaining_tax - basetax[0]) * TaxRate[0]
-   elif 5001 <= remaining_tax <= 20000:
-      taxbalance = fixedtax[1] + (remaining_tax - basetax[1]) * TaxRate[1]
-   elif 20001 <= remaining_tax <= 35000:
-      taxbalance = fixedtax[2] + (remaining_tax - basetax[2]) * TaxRate[2]
-   elif 35001 <= remaining_tax <= 50000:
-      taxbalance = fixedtax[3] + (remaining_tax - basetax[3]) * TaxRate[4]
-   elif 50001 <= remaining_tax <= 70000:
-      taxbalance = fixedtax[4] + (remaining_tax - basetax[4]) * TaxRate[1]
-   elif 70001 <= remaining_tax <= 100000:
-      taxbalance = fixedtax[5] + (remaining_tax - basetax[5]) * TaxRate[1]
-   elif 100001 <= remaining_tax <= 400000:
-      taxbalance = fixedtax[6] + (remaining_tax - basetax[6]) * TaxRate[1]
-   elif 400001 <= remaining_tax <= 600000:
-      taxbalance = fixedtax[7] + (remaining_tax - basetax[7]) * TaxRate[1]
-   elif 600001 <= remaining_tax <= 2000000:
-      taxbalance = fixedtax[8] + (remaining_tax - basetax[8]) * TaxRate[1]
-   elif remaining_tax > 2000000:
-      taxbalance = fixedtax[9] + (remaining_tax - basetax[9]) * TaxRate[1]
+   if 0 <=chargeable_income<= 5000:
+      taxbalance = 0
+   elif 5001 <= chargeable_income <= 20000:
+      taxbalance = fixedtax[1] + (chargeable_income - basetax[1]) * TaxRate[1]
+   elif 20001 <= chargeable_income <= 35000:
+      taxbalance = fixedtax[2] + (chargeable_income - basetax[2]) * TaxRate[2]
+   elif 35001 <= chargeable_income <= 50000:
+      taxbalance = fixedtax[3] + (chargeable_income - basetax[3]) * TaxRate[3]
+   elif 50001 <= chargeable_income <= 70000:
+      taxbalance = fixedtax[4] + (chargeable_income - basetax[4]) * TaxRate[4]
+   elif 70001 <= chargeable_income <= 100000:
+      taxbalance = fixedtax[5] + (chargeable_income - basetax[5]) * TaxRate[5]
+   elif 100001 <= chargeable_income <= 400000:
+      taxbalance = fixedtax[6] + (chargeable_income - basetax[6]) * TaxRate[6]
+   elif 400001 <= chargeable_income <= 600000:
+      taxbalance = fixedtax[7] + (chargeable_income - basetax[7]) * TaxRate[7]
+   elif 600001 <= chargeable_income <= 2000000:
+      taxbalance = fixedtax[8] + (chargeable_income - basetax[8]) * TaxRate[8]
+   elif chargeable_income > 2000000:
+      taxbalance = fixedtax[9] + (chargeable_income - basetax[9]) * TaxRate[9]
 
    return round(taxbalance,2)
    
-
+# window to insert the tax information and calculate the tax 
 def taxwindow():
- tax_estimator = tk.Toplevel()
+ tax_estimator = tk()
  tax_estimator.title("SIMPLE TAX ESTIMATOR")
  tax_estimator.geometry("500x650")
 
- tk.Label(tax_estimator, text="Simple Tax Estimator", font=("Arial",18,"bold")).pack(pady=20)
+ #title
+ tk.Label(tax_estimator, text="Simple Tax Estimator", font=("Arial",18,"bold"),fg='white', bg='#7e9aed',
+                        relief='ridge', bd=3, padx=20, pady=15).pack(fill='x', padx=20, pady=(20,30))
+ 
+ tk.Frame(tax_estimator, bg='#fcf7ed', relief='ridge', bd=2).pack(padx=20, pady=10, fill='both', expand=True)
 
  tk.Label(tax_estimator, text="Annual Income (RM): ").pack()
  income_entry = tk.Entry(tax_estimator, width=30)
