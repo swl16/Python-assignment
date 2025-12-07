@@ -22,9 +22,10 @@ def loadusers():
 def registerwindow():
    register = tk.Toplevel()
    register.title("REGISTER")
-   register.geometry("350x300")
+   register.geometry("450x300")
 
-   tk.Label(register, text = "Register New Account", font=("Arial",18,"bold")).pack(pady=10)
+   tk.Label(register, text = "Register New Account", font=("Arial",18,"bold"), fg='white', bg='#7e9aed',
+                        relief='ridge', bd=3, padx=20, pady=15).pack(fill='x', padx=20, pady=(20,30))
 
    tk.Label(register, text="Username:").pack()
    username_entry = tk.Entry(register, width=30)

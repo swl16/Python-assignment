@@ -36,7 +36,7 @@ def taxcalculation(chargeable_income):
    
 # window to insert the tax information and calculate the tax 
 def taxwindow():
- tax_estimator = tk()
+ tax_estimator = tk.Toplevel()
  tax_estimator.title("SIMPLE TAX ESTIMATOR")
  tax_estimator.geometry("500x650")
 
@@ -44,33 +44,31 @@ def taxwindow():
  tk.Label(tax_estimator, text="Simple Tax Estimator", font=("Arial",18,"bold"),fg='white', bg='#7e9aed',
                         relief='ridge', bd=3, padx=20, pady=15).pack(fill='x', padx=20, pady=(20,30))
  
- tk.Frame(tax_estimator, bg='#fcf7ed', relief='ridge', bd=2).pack(padx=20, pady=10, fill='both', expand=True)
+ tk.Label(tax_estimator, text="Annual Income (RM): ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
+ income_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))
+ income_entry.pack(side= 'left')
 
- tk.Label(tax_estimator, text="Annual Income (RM): ").pack()
- income_entry = tk.Entry(tax_estimator, width=30)
- income_entry.pack()
+ tk.Label(tax_estimator, text="Individual (RM) : 9000", width=30, font=('Arial',13,'bold'),anchor='w').pack(side='left')
 
- tk.Label(tax_estimator, text="Individual (RM) : 9000", width=30).pack()
+ tk.Label(tax_estimator, text="Enter EPF Contribution (RM) : ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
+ epf_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))   
+ epf_entry.pack(side= 'left')
 
- tk.Label(tax_estimator, text="Enter EPF Contribution (RM) : ").pack()
- epf_entry = tk.Entry(tax_estimator, width=30)   
- epf_entry.pack()
+ tk.Label(tax_estimator, text="Enter insurance amount(limited to RM7000) (RM) : ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
+ insurance_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))
+ insurance_entry.pack(side= 'left')
 
- tk.Label(tax_estimator, text="Enter insurance amount(limited to RM7000) (RM) : ").pack()
- insurance_entry = tk.Entry(tax_estimator, width=30)
- insurance_entry.pack()
+ tk.Label(tax_estimator, text="Enter self education fees(limited to 7000) (RM) : ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
+ edufee_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))
+ edufee_entry.pack(side= 'left')
 
- tk.Label(tax_estimator, text="Enter self education fees(limited to 7000) (RM) : ").pack()
- edufee_entry = tk.Entry(tax_estimator, width=30)
- edufee_entry.pack()
+ tk.Label(tax_estimator, text="Enter Donation amount (RM) : ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
+ donate_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))
+ donate_entry.pack(side= 'left')
 
- tk.Label(tax_estimator, text="Enter Donation amount (RM) : ").pack()
- donate_entry = tk.Entry(tax_estimator, width=30)
- donate_entry.pack()
-
- tk.Label(tax_estimator, text="Enter the amount of monthly tax deduction(PCB) (RM) : ").pack()
- pcb_entry = tk.Entry(tax_estimator, width=30)
- pcb_entry.pack()
+ tk.Label(tax_estimator, text="Enter the amount of monthly tax deduction(PCB) (RM) : ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
+ pcb_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))
+ pcb_entry.pack(side= 'left')
 
  taxoutput = tk.Text(tax_estimator, width=60, height=12,font=("Arial",12))
 
@@ -114,3 +112,7 @@ def taxwindow():
       taxoutput.insert("end", "Tax payable < PCB. There is excess deduction.")
 
  tk.Button(tax_estimator, text="Calculate Tax", width=18, command=runtax).pack(pady=6)
+
+ tax_estimator.mainloop()
+
+taxwindow()
