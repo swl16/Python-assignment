@@ -31,14 +31,14 @@ def registerwindow():
    tk.Label(frameregister, text = "Register New Account", font=("Arial",18,"bold"), fg='white', bg='#7e9aed',
                         relief='ridge', bd=3, padx=20, pady=15).pack(fill='x', padx=20, pady=(20,30))
    
-   tk.Label(frameregister, text="Username:", font=('Arial', 15, 'bold')).pack()
+   tk.Label(frameregister, text="Username:", font=('Arial', 15, 'bold')).pack(side="left")
    username_entry = tk.Entry(frameregister, width=30,font=("Arial", 11))
    username_entry.pack(side='left', padx=10)
 
    frameregister1 = tk.Frame(register)
    frameregister1.pack(fill="x", padx=20, pady=6)
 
-   tk.Label(frameregister1, text="Password:", font=('Arial', 15, 'bold')).pack()
+   tk.Label(frameregister1, text="Password:", font=('Arial', 15, 'bold')).pack(side="left")
    password_entry = tk.Entry(frameregister1,width=30,font=("Arial", 11))
    password_entry.pack(side='left', padx=10)
 
@@ -74,7 +74,7 @@ def mainmenu(username):
   def createbutton(text,command):
     tk.Button(menu, text=text, width=25, height=2, font=("Arial",16), command=command).pack(pady=10)
 
-  createbutton("Expense Tracker",lambda:taxwindow(username))
+  createbutton("Expense Tracker",lambda:window(username))
   createbutton("Savings Goal Tracker",lambda:taxwindow(username))
   createbutton("Simple Tax Estimator", lambda:taxwindow(username))
   
@@ -91,14 +91,14 @@ def loginwindow():
   tk.Label(framelogin, text="Login", font=("Arial",18,"bold"), fg='white', bg='#7e9aed',
                         relief='ridge', bd=2, padx=10, pady=10).pack(fill='x', padx=10, pady=(10,20))
   
-  tk.Label(framelogin, text="Username: ", font=('Arial', 15, 'bold')).pack()
+  tk.Label(framelogin, text="Username: ", font=('Arial', 15, 'bold')).pack(side="left")
   username_entry = tk.Entry(framelogin, width=30,font=("Arial", 11))
   username_entry.pack(side="left", padx=10)
 
   framelogin1 = tk.Frame(login)
   framelogin1.pack(fill="x", padx=20, pady=6)
 
-  tk.Label(framelogin1, text="Password: ", font=('Arial', 15, 'bold')).pack()
+  tk.Label(framelogin1, text="Password: ", font=('Arial', 15, 'bold')).pack(side="left")
   password_entry = tk.Entry(framelogin1,width=30,font=("Arial", 11))
   password_entry.pack(side="left", padx=10)
 
