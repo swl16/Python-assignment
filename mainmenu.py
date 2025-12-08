@@ -22,17 +22,17 @@ def loadusers():
 def registerwindow():
    register = tk.Toplevel()
    register.title("REGISTER")
-   register.geometry("450x300")
+   register.geometry("450x400")
 
    tk.Label(register, text = "Register New Account", font=("Arial",18,"bold"), fg='white', bg='#7e9aed',
                         relief='ridge', bd=3, padx=20, pady=15).pack(fill='x', padx=20, pady=(20,30))
-
-   tk.Label(register, text="Username:").pack()
-   username_entry = tk.Entry(register, width=30)
+   
+   tk.Label(register, text="Username:", font=('Arial', 15, 'bold')).pack()
+   username_entry = tk.Entry(register, width=30,font=("Arial", 11))
    username_entry.pack()
 
-   tk.Label(register, text="Password:").pack()
-   password_entry = tk.Entry(register,width=30)
+   tk.Label(register, text="Password:", font=('Arial', 15, 'bold')).pack()
+   password_entry = tk.Entry(register,width=30,font=("Arial", 11))
    password_entry.pack()
 
    def registeruser():
@@ -54,7 +54,8 @@ def registerwindow():
 
        register.destroy()
 
-   tk.Button(register, text="Register", width=25, command=registeruser).pack(pady=20)
+   tk.Button(register, text="Register", width=15,font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, padx=10, 
+             command=registeruser).pack(pady=(40,10),anchor='center')
 
 def mainmenu(username):
   menu = tk.Toplevel()
@@ -75,16 +76,17 @@ def mainmenu(username):
 def loginwindow():
   login = tk.Tk()
   login.title("LOGIN")
-  login.geometry("350x300")
+  login.geometry("450x400")
 
-  tk.Label(login, text="Login", font=("Arial",18,"bold")).pack(pady=20)
-
-  tk.Label(login, text="Username:").pack()
-  username_entry = tk.Entry(login, width=30)
+  tk.Label(login, text="Login", font=("Arial",18,"bold"), fg='white', bg='#7e9aed',
+                        relief='ridge', bd=2, padx=10, pady=10).pack(fill='x', padx=10, pady=(10,20))
+  
+  tk.Label(login, text="Username: ", font=('Arial', 15, 'bold')).pack()
+  username_entry = tk.Entry(login, width=30,font=("Arial", 11))
   username_entry.pack()
 
-  tk.Label(login, text="Password:").pack()
-  password_entry = tk.Entry(login, width=30)
+  tk.Label(login, text="Password: ", font=('Arial', 15, 'bold')).pack()
+  password_entry = tk.Entry(login,width=30,font=("Arial", 11))
   password_entry.pack()
 
   def loginuser():
@@ -99,9 +101,11 @@ def loginwindow():
      else:
       messagebox.showerror("Error","Invalid username or password! Please try again.")
       return
-     
-  tk.Button(login, text="Login", width=25, command=loginuser).pack(pady=10)
-  tk.Button(login, text="Register", width =25, command=registerwindow).pack()
+  
+  tk.Button(login, text="Login", width=15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, padx=10, 
+            command=loginuser).pack(pady=(40,10),anchor='center')
+  tk.Button(login, text="Register", width =15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, padx=10, 
+            command=registerwindow).pack(pady=(0,50),anchor='center')
 
   login.mainloop()
 

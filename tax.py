@@ -113,6 +113,3 @@ def taxwindow():
 
  tk.Button(tax_estimator, text="Calculate Tax", width=18, command=runtax).pack(pady=6)
 
- tax_estimator.mainloop()
-
-taxwindow()
