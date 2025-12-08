@@ -45,6 +45,7 @@ def add_new_expenses():
             writer.writerow([date_input,amount,category_input,remark_input])
 
         refresh_mainpage()
+        refresh_statistics()
         messagebox.showinfo("Success!", "Your expense is added!")
         back_to_mainmenu()
 
@@ -136,6 +137,9 @@ def add_new_expenses():
 def show_page(page):
     page.tkraise()
 
+    if page == Statistic_page:
+        refresh_statistics()
+
 #Main window
 window.geometry("500x650")
 window.title("Expenses Tracker")
@@ -161,9 +165,9 @@ bottom_menu = Frame(window, bg='#7e9aed', height=90)
 bottom_menu.pack(side='bottom', fill='x')
 
 Main_button = Button(bottom_menu, text="Home", font=("Arial", 15, 'bold'), bg='#7e9aed', fg='white',
-                     command=lambda: show_page(Mainpage))
-Month_button = Button(bottom_menu, text="Monthly Expenses", font=("Arial", 15, 'bold'), bg='#7e9aed', fg='white',
-                      command=lambda: show_page(MonthPage))
+                     command=lambda: show_page(MonthPage))
+Month_button = Button(bottom_menu, text="Expenses Tracker", font=("Arial", 15, 'bold'), bg='#7e9aed', fg='white',
+                      command=lambda: show_page(Mainpage))
 Statistic_button = Button(bottom_menu, text="Statistic", font=("Arial", 15, 'bold'), bg='#7e9aed', fg='white',
                           command=lambda: show_page(Statistic_page))
 
@@ -247,6 +251,7 @@ def delete_expense(index):
             writer.writerows(data)
 
         refresh_mainpage()
+        refresh_statistics()
 
     else:
         return
@@ -294,6 +299,7 @@ def Edit_expense(index):
             writer.writerows(data)
 
         refresh_mainpage()
+        refresh_statistics()
         messagebox.showinfo("Success!", "Your expense is edited successfully!")
         back_to_mainmenu()
 
@@ -438,7 +444,7 @@ def refresh_mainpage():
             Remark_label = Label(Label_Frame, text=row[3], font=('Arial', 10), fg='black', bg='#fcf7ed', wraplength=250,justify='left')
             Remark_label.pack(side="left")
 
-        Edit_button = Button(Outer_frame,text='✏',bg='#7e9aed', fg='white',width=2,height=1,command=lambda idx=index:Edit_expense(idx))
+        Edit_button = Button(Outer_frame,text='📝',bg='#7e9aed', fg='white',width=2,height=1,command=lambda idx=index:Edit_expense(idx))
         Edit_button.pack(side="right",padx=(0,10))
 
         Delete_button = Button(Outer_frame,text='🗑',bg='#7e9aed', fg='white',width=2,height=1,command=lambda idx=index:delete_expense(idx))
@@ -447,30 +453,7 @@ def refresh_mainpage():
 Check_empty_file()
 refresh_mainpage()
 
-
-
 #Statistic
-def Get_month_data():
-    pie_data = []
-    data = read_expenses()
-
-    for row in data:
-        month = datetime.strptime(row[0],"%d/%m/%Y").strftime('%m/%Y')
-        pie_data.append([month,row[1],row[2]])
-
-    pie_data.sort(key=lambda row: (datetime.strptime(row[0], "%m/%Y")), reverse=True)
-
-    month = [row[0] for row in pie_data]
-
-    MonthCombo_combobox['values'] = month
-    if month:
-        if MonthCombo_combobox.get() not in month:
-            MonthCombo_combobox.set(month[0])
-    else:
-        MonthCombo_combobox.set('')
-    return pie_data
-
-
 Title_label = Label(Statistic_page,text='Monthly Statistics',font=('Arial', 18, 'bold'), fg='white', bg='#7e9aed',relief='ridge', bd=3, padx=20, pady=15)
 Title_label.pack(fill='x', padx=20, pady=(30,20))
 
@@ -480,40 +463,79 @@ Month_frame.pack(padx=20,pady=(10,40),fill='both',expand=True)
 in_frame = Frame(Month_frame,bg='#fcf7ed')
 in_frame.pack(padx=30,pady=30,fill='both',expand=True)
 
-MonthCombo_frame = Frame(in_frame,bg='#fcf7ed')
-MonthCombo_frame.pack(fill='x',pady=(0,20))
+def refresh_statistics():
+    def Get_month_data():
+        pie_data = []
+        data = read_expenses()
 
-MonthCombo_label = Label(MonthCombo_frame,text='Select Month:',font=("Arial", 15,'bold'),fg='black',bg='#fcf7ed')
-MonthCombo_label.pack(side='left',padx=(0,40))
+        for row in data:
+            month = datetime.strptime(row[0],"%d/%m/%Y").strftime('%m/%Y')
+            pie_data.append([month,row[1],row[2]])
 
-MonthCombo_combobox = ttk.Combobox(MonthCombo_frame, font=("Arial", 11), width=15,state='readonly')
-Get_month_data()
-MonthCombo_combobox.pack(side='left')
+        pie_data.sort(key=lambda row: (datetime.strptime(row[0], "%m/%Y")), reverse=True)
 
-Month = MonthCombo_combobox.get()
+        month = []
+        seen = set()
+        for row in pie_data:
+            if row[0] not in seen:
+                month.append(row[0])
+                seen.add(row[0])
 
-def show_pie_chart(Month):
-    pie_data = Get_month_data()
-    piechart_label = []
-    piechart_sizes = []
+        MonthCombo_combobox['values'] = month
 
-    for widget in in_frame.winfo_children():
-        widget.destroy()
+        if month:
+            if MonthCombo_combobox.get() not in month:
+                MonthCombo_combobox.set(month[0])
+        else:
+            MonthCombo_combobox.set('')
+        return pie_data
 
-    for row in pie_data:
-        if row[0] == Month:
-            piechart_label.append(row[2])
-            piechart_sizes.append(row[1])
+    MonthCombo_frame = Frame(in_frame,bg='#fcf7ed')
+    MonthCombo_frame.pack(fill='x',pady=(0,20))
 
-    fig, ax = plt.subplots(figsize=(4, 4), dpi=100)
-    ax.pie(piechart_sizes,labels=piechart_label,autopct="%1.1f%%")
-    ax.axis('equal')
-    ax.set_title(f"Expenses for {MonthCombo_combobox.get()}")
+    MonthCombo_label = Label(MonthCombo_frame,text='Select Month:',font=("Arial", 15,'bold'),fg='black',bg='#fcf7ed')
+    MonthCombo_label.pack(side='left',padx=(0,40))
 
-    chart = FigureCanvasTkAgg(fig, master=in_frame)
-    chart.draw()
-    chart.get_tk_widget().pack(fill='both', expand=True)
+    MonthCombo_combobox = ttk.Combobox(MonthCombo_frame, font=("Arial", 11), width=15,state='readonly')
+    MonthCombo_combobox.pack(side='left')
 
-show_pie_chart(Month)
+    MonthCombo_combobox.bind("<<ComboboxSelected>>", lambda event: show_pie_chart(MonthCombo_combobox.get()))
+
+
+    pie_frame = Frame(in_frame,bg='#fcf7ed')
+    pie_frame.pack(fill='both',expand=True)
+
+    def show_pie_chart(Month):
+        pie_data = Get_month_data()
+        piechart_label = []
+        piechart_sizes = []
+
+        for widget in pie_frame.winfo_children():
+            widget.destroy()
+
+        for row in pie_data:
+            if row[0] == Month:
+                piechart_label.append(row[2])
+                piechart_sizes.append(row[1])
+
+        if not piechart_sizes:
+            No_data_label = Label(pie_frame,text="There is no record for this month.",font=('Arial', 15, 'bold'), fg='#7e9aed', bg='#fcf7ed')
+            No_data_label.place(anchor='center', relx=0.5, rely=0.5)
+            return
+
+        fig, ax = plt.subplots(figsize=(4, 4), dpi=100)
+        ax.pie(piechart_sizes,labels=piechart_label,autopct="%1.1f%%")
+        ax.axis('equal')
+        ax.set_title(f"Expenses for {Month}")
+
+        chart = FigureCanvasTkAgg(fig, master=pie_frame)
+        chart.draw()
+        chart.get_tk_widget().pack(fill='both', expand=True)
+
+    Get_month_data()
+    if MonthCombo_combobox.get():
+        show_pie_chart(MonthCombo_combobox.get())
+
+refresh_statistics()
 
 window.mainloop()
