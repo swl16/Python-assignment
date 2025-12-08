@@ -6,6 +6,7 @@ import csv
 import os
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from unicodedata import category
 
 window = Tk()
 Empty_label = None
@@ -463,7 +464,11 @@ Month_frame.pack(padx=20,pady=(10,40),fill='both',expand=True)
 in_frame = Frame(Month_frame,bg='#fcf7ed')
 in_frame.pack(padx=30,pady=30,fill='both',expand=True)
 
+select_month = None
+
 def refresh_statistics():
+    global select_month
+
     def Get_month_data():
         pie_data = []
         data = read_expenses()
@@ -481,14 +486,10 @@ def refresh_statistics():
                 month.append(row[0])
                 seen.add(row[0])
 
-        MonthCombo_combobox['values'] = month
+        return pie_data , month
 
-        if month:
-            if MonthCombo_combobox.get() not in month:
-                MonthCombo_combobox.set(month[0])
-        else:
-            MonthCombo_combobox.set('')
-        return pie_data
+    for widget in in_frame.winfo_children():
+        widget.destroy()
 
     MonthCombo_frame = Frame(in_frame,bg='#fcf7ed')
     MonthCombo_frame.pack(fill='x',pady=(0,20))
@@ -499,29 +500,34 @@ def refresh_statistics():
     MonthCombo_combobox = ttk.Combobox(MonthCombo_frame, font=("Arial", 11), width=15,state='readonly')
     MonthCombo_combobox.pack(side='left')
 
-    MonthCombo_combobox.bind("<<ComboboxSelected>>", lambda event: show_pie_chart(MonthCombo_combobox.get()))
-
-
     pie_frame = Frame(in_frame,bg='#fcf7ed')
     pie_frame.pack(fill='both',expand=True)
 
     def show_pie_chart(Month):
-        pie_data = Get_month_data()
-        piechart_label = []
-        piechart_sizes = []
+        global select_month
+        selected_month = Month
+
+        pie_data, _ = Get_month_data()
+        category_amount = {}
 
         for widget in pie_frame.winfo_children():
             widget.destroy()
 
+        plt.close('all')
+
         for row in pie_data:
             if row[0] == Month:
-                piechart_label.append(row[2])
-                piechart_sizes.append(row[1])
+                category = row[2]
+                amount = float(row[1])
+                category_amount[category] = category_amount.get(category, 0) + amount
 
-        if not piechart_sizes:
+        if not category_amount:
             No_data_label = Label(pie_frame,text="There is no record for this month.",font=('Arial', 15, 'bold'), fg='#7e9aed', bg='#fcf7ed')
             No_data_label.place(anchor='center', relx=0.5, rely=0.5)
             return
+
+        piechart_label = list(category_amount.keys())
+        piechart_sizes = list(category_amount.values())
 
         fig, ax = plt.subplots(figsize=(4, 4), dpi=100)
         ax.pie(piechart_sizes,labels=piechart_label,autopct="%1.1f%%")
@@ -532,9 +538,23 @@ def refresh_statistics():
         chart.draw()
         chart.get_tk_widget().pack(fill='both', expand=True)
 
-    Get_month_data()
-    if MonthCombo_combobox.get():
-        show_pie_chart(MonthCombo_combobox.get())
+    MonthCombo_combobox.bind("<<ComboboxSelected>>", lambda event: show_pie_chart(MonthCombo_combobox.get()))
+
+    pie_data, month = Get_month_data()
+    MonthCombo_combobox['values'] = month
+
+    if month:
+        if select_month and select_month in month:
+            MonthCombo_combobox.set(select_month)
+            show_pie_chart(select_month)
+        else:
+            MonthCombo_combobox.set(month[0])
+            select_month = month[0]
+            show_pie_chart(select_month)
+
+    else:
+        MonthCombo_combobox.set('')
+        select_month = None
 
 refresh_statistics()
 
