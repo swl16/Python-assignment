@@ -91,14 +91,14 @@ def loginwindow():
   tk.Label(framelogin, text="Login", font=("Arial",18,"bold"), fg='white', bg='#7e9aed',
                         relief='ridge', bd=2, padx=10, pady=10).pack(fill='x', padx=10, pady=(10,20))
   
-  tk.Label(framelogin, text="Username: ", font=('Arial', 15, 'bold')).pack()
+  tk.Label(framelogin, text="Username: ", font=('Arial', 15, 'bold')).pack(side="left")
   username_entry = tk.Entry(framelogin, width=30,font=("Arial", 11))
   username_entry.pack(side="left", padx=10)
 
   framelogin1 = tk.Frame(login)
   framelogin1.pack(fill="x", padx=20, pady=6)
 
-  tk.Label(framelogin1, text="Password: ", font=('Arial', 15, 'bold')).pack()
+  tk.Label(framelogin1, text="Password: ", font=('Arial', 15, 'bold')).pack(side="left")
   password_entry = tk.Entry(framelogin1,width=30,font=("Arial", 11))
   password_entry.pack(side="left", padx=10)
 
