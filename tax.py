@@ -1,75 +1,114 @@
 import tkinter as tk
 from tkinter import messagebox
 
+#from google LHDN Malaysia, latest tax rate 
 TaxRate = (0.0, 0.01, 0.03, 0.06, 0.11, 0.19, 0.25, 0.26, 0.28, 0.30)
 basetax = [5000, 5000, 20000, 35000, 50000, 70000, 100000, 400000, 600000, 2000000]
 fixedtax = (0, 0, 150, 600, 1500, 3700, 9400, 84400, 136400, 528400)
 
+# calculate the income tax balance
 def taxcalculation(chargeable_income):
    if chargeable_income<=0:
       return 0.0
-   remaining_tax = chargeable_income
    taxbalance = 0.0
-   if 0 <= remaining_tax <= 5000:
-      taxbalance = fixedtax[0] + (remaining_tax - basetax[0]) * TaxRate[0]
-   elif 5001 <= remaining_tax <= 20000:
-      taxbalance = fixedtax[1] + (remaining_tax - basetax[1]) * TaxRate[1]
-   elif 20001 <= remaining_tax <= 35000:
-      taxbalance = fixedtax[2] + (remaining_tax - basetax[2]) * TaxRate[2]
-   elif 35001 <= remaining_tax <= 50000:
-      taxbalance = fixedtax[3] + (remaining_tax - basetax[3]) * TaxRate[4]
-   elif 50001 <= remaining_tax <= 70000:
-      taxbalance = fixedtax[4] + (remaining_tax - basetax[4]) * TaxRate[1]
-   elif 70001 <= remaining_tax <= 100000:
-      taxbalance = fixedtax[5] + (remaining_tax - basetax[5]) * TaxRate[1]
-   elif 100001 <= remaining_tax <= 400000:
-      taxbalance = fixedtax[6] + (remaining_tax - basetax[6]) * TaxRate[1]
-   elif 400001 <= remaining_tax <= 600000:
-      taxbalance = fixedtax[7] + (remaining_tax - basetax[7]) * TaxRate[1]
-   elif 600001 <= remaining_tax <= 2000000:
-      taxbalance = fixedtax[8] + (remaining_tax - basetax[8]) * TaxRate[1]
-   elif remaining_tax > 2000000:
-      taxbalance = fixedtax[9] + (remaining_tax - basetax[9]) * TaxRate[1]
+   if 0 <=chargeable_income<= 5000:
+      taxbalance = 0
+   elif 5001 <= chargeable_income <= 20000:
+      taxbalance = fixedtax[1] + (chargeable_income - basetax[1]) * TaxRate[1]
+   elif 20001 <= chargeable_income <= 35000:
+      taxbalance = fixedtax[2] + (chargeable_income - basetax[2]) * TaxRate[2]
+   elif 35001 <= chargeable_income <= 50000:
+      taxbalance = fixedtax[3] + (chargeable_income - basetax[3]) * TaxRate[3]
+   elif 50001 <= chargeable_income <= 70000:
+      taxbalance = fixedtax[4] + (chargeable_income - basetax[4]) * TaxRate[4]
+   elif 70001 <= chargeable_income <= 100000:
+      taxbalance = fixedtax[5] + (chargeable_income - basetax[5]) * TaxRate[5]
+   elif 100001 <= chargeable_income <= 400000:
+      taxbalance = fixedtax[6] + (chargeable_income - basetax[6]) * TaxRate[6]
+   elif 400001 <= chargeable_income <= 600000:
+      taxbalance = fixedtax[7] + (chargeable_income - basetax[7]) * TaxRate[7]
+   elif 600001 <= chargeable_income <= 2000000:
+      taxbalance = fixedtax[8] + (chargeable_income - basetax[8]) * TaxRate[8]
+   elif chargeable_income > 2000000:
+      taxbalance = fixedtax[9] + (chargeable_income - basetax[9]) * TaxRate[9]
 
    return round(taxbalance,2)
    
-
+# window to insert the tax information and calculate the tax 
 def taxwindow():
  tax_estimator = tk.Toplevel()
  tax_estimator.title("SIMPLE TAX ESTIMATOR")
- tax_estimator.geometry("500x650")
+ tax_estimator.geometry("550x670")
 
- tk.Label(tax_estimator, text="Simple Tax Estimator", font=("Arial",18,"bold")).pack(pady=20)
+ #do a frame so that two widgets can be on the same line
+ frame = tk.Frame(tax_estimator)
+ frame.pack(fill="x", padx=20, pady=6)
 
- tk.Label(tax_estimator, text="Annual Income (RM): ").pack()
- income_entry = tk.Entry(tax_estimator, width=30)
- income_entry.pack()
+ #title
+ tk.Label(frame, text="Simple Tax Estimator", font=("Arial",18,"bold"),fg='white', bg='#7e9aed',
+          relief='ridge', bd=3, padx=20, pady=15).pack(fill='x', padx=20, pady=(30,20))
+ 
+ tk.Label(frame, text="Annual Income (RM): ", font=('Arial', 13, 'bold')).pack(side="left")
+ income_entry = tk.Entry(frame, width=30, font=('Arial', 11))
+ income_entry.pack(side="left", padx=10)
 
- tk.Label(tax_estimator, text="Individual (RM) : 9000", width=30).pack()
+ frame1 = tk.Frame(tax_estimator)
+ frame1.pack(fill="x", padx=20, pady=6)
 
- tk.Label(tax_estimator, text="Enter EPF Contribution (RM) : ").pack()
- epf_entry = tk.Entry(tax_estimator, width=30)   
- epf_entry.pack()
+ tk.Label(frame1, text="Enter EPF Contribution (RM) : ", font=('Arial', 13, 'bold')).pack(side="left")
+ epf_entry = tk.Entry(frame1, width=30, font=('Arial', 11))
+ epf_entry.pack(side="left", padx=10)
 
- tk.Label(tax_estimator, text="Enter insurance amount(limited to RM7000) (RM) : ").pack()
- insurance_entry = tk.Entry(tax_estimator, width=30)
- insurance_entry.pack()
+ frame2 = tk.Frame(tax_estimator)
+ frame2.pack(fill="x", padx=20, pady=6)
 
- tk.Label(tax_estimator, text="Enter self education fees(limited to 7000) (RM) : ").pack()
- edufee_entry = tk.Entry(tax_estimator, width=30)
- edufee_entry.pack()
+ tk.Label(frame2, text="Enter insurance amount(max RM7000) (RM) : ", font=('Arial', 13, 'bold')).pack(side="left")
+ insurance_entry = tk.Entry(frame2, width=30, font=('Arial', 11))
+ insurance_entry.pack(side="left", padx=10)
 
- tk.Label(tax_estimator, text="Enter Donation amount (RM) : ").pack()
- donate_entry = tk.Entry(tax_estimator, width=30)
- donate_entry.pack()
+ frame3 = tk.Frame(tax_estimator)
+ frame3.pack(fill="x", padx=20, pady=6)
 
- tk.Label(tax_estimator, text="Enter the amount of monthly tax deduction(PCB) (RM) : ").pack()
- pcb_entry = tk.Entry(tax_estimator, width=30)
- pcb_entry.pack()
+ tk.Label(frame3, text="Enter self education fees(max RM7000) (RM) : ", font=('Arial', 13, 'bold')).pack(side="left")
+ edufee_entry = tk.Entry(frame3, width=30, font=('Arial', 11))
+ edufee_entry.pack(side="left", padx=10)
 
+ frame4 = tk.Frame(tax_estimator)
+ frame4.pack(fill="x", padx=20, pady=6)
+
+ tk.Label(frame4, text="Enter Donation amount (RM) : ", font=('Arial', 13, 'bold')).pack(side="left")
+ donate_entry = tk.Entry(frame4, width=30, font=('Arial', 11))
+ donate_entry.pack(side="left", padx=10)
+
+ frame5 = tk.Frame(tax_estimator)
+ frame5.pack(fill="x", padx=20, pady=6)
+
+ tk.Label(frame5, text="Enter the amount of monthly tax deduction(PCB) (RM) : ", font=('Arial', 13, 'bold')).pack(side="left")
+ pcb_entry = tk.Entry(frame5, width=30, font=('Arial', 11))
+ pcb_entry.pack(side="left", padx=10)
+
+ frame6 = tk.Frame(tax_estimator)
+ frame6.pack(fill="x", padx=20, pady=6)
+
+ tk.Label(frame6, text="Individual Relief (RM) : 9000", font=('Arial',13,'bold')).pack(side='left')
+ 
+ #output text
  taxoutput = tk.Text(tax_estimator, width=60, height=12,font=("Arial",12))
+ taxoutput.pack(pady=15)
 
+ #calculation
  def runtax():
+
+   if(income_entry.get().strip() == "" or
+      epf_entry.get().strip() == "" or
+      insurance_entry.get().strip() == "" or
+      edufee_entry.get().strip() == "" or
+      donate_entry.get().strip() == "" or
+      pcb_entry.get().strip() == ""):
+
+      messagebox.showerror("Input Error!", "Please fill in ALL fields before calculating.")
+      return
+
    try:
      income = float(income_entry.get() or 0)
      epf = float(epf_entry.get() or 0)
@@ -104,8 +143,14 @@ def taxwindow():
    taxoutput.insert("end", f"Estimated Income Tax Payable : RM {taxpayable:.2f}\n")
    taxoutput.insert("end", f"Total PCB Deducted : RM {totalpcb:.2f}\n")
    if taxpayable > totalpcb:
-      taxoutput.insert("end", "Tax payable > PCB. There is insufficient tax payment")
+      taxoutput.insert("end", "❗Tax payable > PCB. There is insufficient tax payment.")
    else:
-      taxoutput.insert("end", "Tax payable < PCB. There is excess deduction.")
+      taxoutput.insert("end", "✔ Tax payable < PCB. There is excess deduction. You get refund.")
 
- tk.Button(tax_estimator, text="Calculate Tax", width=18, command=runtax).pack(pady=6)
+ tk.Button(tax_estimator, text="Calculate Tax", width=15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, 
+           padx=10, command=runtax).pack(pady=(40,10),anchor='center')
+
+ tax_estimator.mainloop()
+
+
+taxwindow()
