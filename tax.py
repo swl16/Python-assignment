@@ -38,41 +38,77 @@ def taxcalculation(chargeable_income):
 def taxwindow():
  tax_estimator = tk.Toplevel()
  tax_estimator.title("SIMPLE TAX ESTIMATOR")
- tax_estimator.geometry("500x650")
+ tax_estimator.geometry("550x670")
+
+ #do a frame so that two widgets can be on the same line
+ frame = tk.Frame(tax_estimator)
+ frame.pack(fill="x", padx=20, pady=6)
 
  #title
- tk.Label(tax_estimator, text="Simple Tax Estimator", font=("Arial",18,"bold"),fg='white', bg='#7e9aed',
-                        relief='ridge', bd=3, padx=20, pady=15).pack(fill='x', padx=20, pady=(20,30))
+ tk.Label(frame, text="Simple Tax Estimator", font=("Arial",18,"bold"),fg='white', bg='#7e9aed',
+          relief='ridge', bd=3, padx=20, pady=15).pack(fill='x', padx=20, pady=(30,20))
  
- tk.Label(tax_estimator, text="Annual Income (RM): ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
- income_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))
- income_entry.pack(side= 'left')
+ tk.Label(frame, text="Annual Income (RM): ", font=('Arial', 13, 'bold')).pack(side="left")
+ income_entry = tk.Entry(frame, width=30, font=('Arial', 11))
+ income_entry.pack(side="left", padx=10)
 
- tk.Label(tax_estimator, text="Individual (RM) : 9000", width=30, font=('Arial',13,'bold'),anchor='w').pack(side='left')
+ frame1 = tk.Frame(tax_estimator)
+ frame1.pack(fill="x", padx=20, pady=6)
 
- tk.Label(tax_estimator, text="Enter EPF Contribution (RM) : ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
- epf_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))   
- epf_entry.pack(side= 'left')
+ tk.Label(frame1, text="Enter EPF Contribution (RM) : ", font=('Arial', 13, 'bold')).pack(side="left")
+ epf_entry = tk.Entry(frame1, width=30, font=('Arial', 11))
+ epf_entry.pack(side="left", padx=10)
 
- tk.Label(tax_estimator, text="Enter insurance amount(limited to RM7000) (RM) : ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
- insurance_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))
- insurance_entry.pack(side= 'left')
+ frame2 = tk.Frame(tax_estimator)
+ frame2.pack(fill="x", padx=20, pady=6)
 
- tk.Label(tax_estimator, text="Enter self education fees(limited to 7000) (RM) : ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
- edufee_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))
- edufee_entry.pack(side= 'left')
+ tk.Label(frame2, text="Enter insurance amount(max RM7000) (RM) : ", font=('Arial', 13, 'bold')).pack(side="left")
+ insurance_entry = tk.Entry(frame2, width=30, font=('Arial', 11))
+ insurance_entry.pack(side="left", padx=10)
 
- tk.Label(tax_estimator, text="Enter Donation amount (RM) : ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
- donate_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))
- donate_entry.pack(side= 'left')
+ frame3 = tk.Frame(tax_estimator)
+ frame3.pack(fill="x", padx=20, pady=6)
 
- tk.Label(tax_estimator, text="Enter the amount of monthly tax deduction(PCB) (RM) : ", font=('Arial', 13, 'bold'),anchor='w').pack(side='left')
- pcb_entry = tk.Entry(tax_estimator, width=30, font=('Arial', 11))
- pcb_entry.pack(side= 'left')
+ tk.Label(frame3, text="Enter self education fees(max RM7000) (RM) : ", font=('Arial', 13, 'bold')).pack(side="left")
+ edufee_entry = tk.Entry(frame3, width=30, font=('Arial', 11))
+ edufee_entry.pack(side="left", padx=10)
 
+ frame4 = tk.Frame(tax_estimator)
+ frame4.pack(fill="x", padx=20, pady=6)
+
+ tk.Label(frame4, text="Enter Donation amount (RM) : ", font=('Arial', 13, 'bold')).pack(side="left")
+ donate_entry = tk.Entry(frame4, width=30, font=('Arial', 11))
+ donate_entry.pack(side="left", padx=10)
+
+ frame5 = tk.Frame(tax_estimator)
+ frame5.pack(fill="x", padx=20, pady=6)
+
+ tk.Label(frame5, text="Enter the amount of monthly tax deduction(PCB) (RM) : ", font=('Arial', 13, 'bold')).pack(side="left")
+ pcb_entry = tk.Entry(frame5, width=30, font=('Arial', 11))
+ pcb_entry.pack(side="left", padx=10)
+
+ frame6 = tk.Frame(tax_estimator)
+ frame6.pack(fill="x", padx=20, pady=6)
+
+ tk.Label(frame6, text="Individual Relief (RM) : 9000", font=('Arial',13,'bold')).pack(side='left')
+ 
+ #output text
  taxoutput = tk.Text(tax_estimator, width=60, height=12,font=("Arial",12))
+ taxoutput.pack(pady=15)
 
+ #calculation
  def runtax():
+
+   if(income_entry.get().strip() == "" or
+      epf_entry.get().strip() == "" or
+      insurance_entry.get().strip() == "" or
+      edufee_entry.get().strip() == "" or
+      donate_entry.get().strip() == "" or
+      pcb_entry.get().strip() == ""):
+
+      messagebox.showerror("Input Error!", "Please fill in ALL fields before calculating.")
+      return
+
    try:
      income = float(income_entry.get() or 0)
      epf = float(epf_entry.get() or 0)
@@ -107,9 +143,14 @@ def taxwindow():
    taxoutput.insert("end", f"Estimated Income Tax Payable : RM {taxpayable:.2f}\n")
    taxoutput.insert("end", f"Total PCB Deducted : RM {totalpcb:.2f}\n")
    if taxpayable > totalpcb:
-      taxoutput.insert("end", "Tax payable > PCB. There is insufficient tax payment")
+      taxoutput.insert("end", "❗Tax payable > PCB. There is insufficient tax payment.")
    else:
-      taxoutput.insert("end", "Tax payable < PCB. There is excess deduction.")
+      taxoutput.insert("end", "✔ Tax payable < PCB. There is excess deduction. You get refund.")
 
- tk.Button(tax_estimator, text="Calculate Tax", width=18, command=runtax).pack(pady=6)
+ tk.Button(tax_estimator, text="Calculate Tax", width=15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, 
+           padx=10, command=runtax).pack(pady=(40,10),anchor='center')
 
+ tax_estimator.mainloop()
+
+
+taxwindow()
