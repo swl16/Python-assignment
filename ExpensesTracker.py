@@ -6,7 +6,6 @@ import csv
 import os
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from unicodedata import category
 
 window = Tk()
 Empty_label = None
