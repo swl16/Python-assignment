@@ -34,14 +34,12 @@ def taxcalculation(chargeable_income):
 
    return round(taxbalance,2)
 
-window = tk.Tk()
    
 # window to insert the tax information and calculate the tax 
 def taxwindow():
- tax_estimator = tk.Toplevel(window)
+ tax_estimator = tk.Tk()
  tax_estimator.title("SIMPLE TAX ESTIMATOR")
  tax_estimator.geometry("550x670")
- window.withdraw()
 
  #do a frame so that two widgets can be on the same line
  frame = tk.Frame(tax_estimator)
@@ -51,35 +49,35 @@ def taxwindow():
  tk.Label(frame, text="Simple Tax Estimator", font=("Arial",18,"bold"),fg='white', bg='#7e9aed',
           relief='ridge', bd=3, padx=20, pady=15).pack(fill='x', padx=20, pady=(30,20))
  
- tk.Label(frame, text="Annual Income (RM)                                   : ", font=('Arial', 13, 'bold')).pack(side="left")
+ tk.Label(frame, text="Annual Income (RM)                                                       : ", font=('Arial', 13, 'bold')).pack(side="left")
  income_entry = tk.Entry(frame, width=30, font=('Arial', 11))
  income_entry.pack(side="left", padx=10)
 
  frame1 = tk.Frame(tax_estimator)
  frame1.pack(fill="x", padx=20, pady=6)
 
- tk.Label(frame1, text="Enter EPF Contribution (RM)                         : ", font=('Arial', 13, 'bold')).pack(side="left")
+ tk.Label(frame1, text="Enter EPF Contribution (RM)                                         : ", font=('Arial', 13, 'bold')).pack(side="left")
  epf_entry = tk.Entry(frame1, width=30, font=('Arial', 11))
  epf_entry.pack(side="left", padx=10)
 
  frame2 = tk.Frame(tax_estimator)
  frame2.pack(fill="x", padx=20, pady=6)
 
- tk.Label(frame2, text="Enter insurance amount(max RM7000) (RM)             : ", font=('Arial', 13, 'bold')).pack(side="left")
+ tk.Label(frame2, text="Enter insurance amount(max RM7000) (RM)                  : ", font=('Arial', 13, 'bold')).pack(side="left")
  insurance_entry = tk.Entry(frame2, width=30, font=('Arial', 11))
  insurance_entry.pack(side="left", padx=10)
 
  frame3 = tk.Frame(tax_estimator)
  frame3.pack(fill="x", padx=20, pady=6)
 
- tk.Label(frame3, text="Enter self education fees(max RM7000) (RM)          : ", font=('Arial', 13, 'bold')).pack(side="left")
+ tk.Label(frame3, text="Enter self education fees(max RM7000) (RM)                 : ", font=('Arial', 13, 'bold')).pack(side="left")
  edufee_entry = tk.Entry(frame3, width=30, font=('Arial', 11))
  edufee_entry.pack(side="left", padx=10)
 
  frame4 = tk.Frame(tax_estimator)
  frame4.pack(fill="x", padx=20, pady=6)
 
- tk.Label(frame4, text="Enter Donation amount (RM)                          : ", font=('Arial', 13, 'bold')).pack(side="left")
+ tk.Label(frame4, text="Enter Donation amount (RM)                                         : ", font=('Arial', 13, 'bold')).pack(side="left")
  donate_entry = tk.Entry(frame4, width=30, font=('Arial', 11))
  donate_entry.pack(side="left", padx=10)
 
