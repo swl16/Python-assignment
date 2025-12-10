@@ -77,7 +77,7 @@ def mainmenu(username):
 
   createbutton("Expense Tracker",lambda:ExpensesTracker(username))
   createbutton("Savings Goal Tracker",lambda:taxwindow(username))
-  createbutton("Simple Tax Estimator", lambda:taxwindow(username))
+  createbutton("Simple Tax Estimator", lambda:taxwindow())
   
   tk.Button(menu, text="Logout", font=("Arial",16), width=10, height=1, fg='black', bg="#ff0000",command=menu.destroy).pack(pady=10, side='bottom', anchor='center')
 

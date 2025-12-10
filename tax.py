@@ -148,10 +148,15 @@ def taxwindow():
    else:
       taxoutput.insert("end", "✔ Tax payable < PCB. There is excess deduction. You get refund.")
 
+ def destroypage():
+   tax_estimator.destroy()
+
  tk.Button(tax_estimator, text="Calculate Tax", width=15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, 
            padx=10, command=runtax).pack(pady=(40,10),anchor='center')
+ tk.Button(tax_estimator, text="Back", width=10, font=("Arial",15,'bold'), fg='black',bg='#7e9aed',relief='ridge', bd=2, 
+           padx=10, command=destroypage).pack(pady=(40,10),anchor='center')
  
- tax_estimator.mainloop()
+ #tax_estimator.mainloop()
 
-taxwindow()
+#taxwindow()
 
