@@ -7,10 +7,11 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-def ExpensesTracker():
+def ExpensesTracker(username):
     global window, Empty_label, Category, select_month
 
     window = Tk()
+    Username = username
     Empty_label = None
     Category = ('Food', 'Household', 'Health', 'Beauty', 'Entertainment', 'Other')
 
@@ -43,7 +44,7 @@ def ExpensesTracker():
 
             amount = f"{amount:.2f}"
 
-            with open('expenses_record.csv','a',newline='',encoding="utf-8") as file:
+            with open(f'{Username}/expenses_record.csv','a',newline='',encoding="utf-8") as file:
                 writer = csv.writer(file)
                 writer.writerow([date_input,amount,category_input,remark_input])
 
@@ -232,11 +233,13 @@ def ExpensesTracker():
         total_label.place(anchor='center', relx=0.5, rely=0.5)
 
     def read_expenses():
-        if not os.path.exists('expenses_record.csv') or os.path.getsize('expenses_record.csv') == 0:
+        os.makedirs(Username,exist_ok=True)
+
+        if not os.path.exists(f'{Username}/expenses_record.csv') or os.path.getsize(f'{Username}/expenses_record.csv') == 0:
             return []
 
         try:
-            with open("expenses_record.csv", "r", encoding='utf-8') as file:
+            with open(f'{Username}/expenses_record.csv', "r", encoding='utf-8') as file:
                 reader = csv.reader(file)
                 data = [row for row in reader if row]
 
@@ -249,7 +252,7 @@ def ExpensesTracker():
             data = read_expenses()
             data.pop(index)
 
-            with open("expenses_record.csv", "w", newline='',encoding='utf-8') as file:
+            with open(f'{Username}/expenses_record.csv', "w", newline='',encoding='utf-8') as file:
                 writer = csv.writer(file)
                 writer.writerows(data)
 
@@ -297,7 +300,7 @@ def ExpensesTracker():
 
             data[index] = [date_input, amount , category_input, remark_input]
 
-            with open('expenses_record.csv', 'w', newline='', encoding="utf-8") as file:
+            with open(f'{Username}/expenses_record.csv', 'w', newline='', encoding="utf-8") as file:
                 writer = csv.writer(file)
                 writer.writerows(data)
 
@@ -562,4 +565,5 @@ def ExpensesTracker():
 
     window.mainloop()
 
-ExpensesTracker()
+#username = 'wei'
+#ExpensesTracker(username)
