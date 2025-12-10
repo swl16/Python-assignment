@@ -7,13 +7,15 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-def ExpensesTracker(username):
+def ExpensesTracker(username,mainpage):
     global window, Empty_label, Category, select_month
 
     window = Tk()
     Username = username
     Empty_label = None
     Category = ('Food', 'Household', 'Health', 'Beauty', 'Entertainment', 'Other')
+
+    mainpage.withdraw()
 
     def add_new_expenses():
 
@@ -144,6 +146,10 @@ def ExpensesTracker(username):
         if page == Statistic_page:
             refresh_statistics()
 
+    def back_to_menu():
+        mainpage.deiconify()
+        window.destroy()
+
     #Main window
     window.geometry("500x650")
     window.title("Expenses Tracker")
@@ -169,7 +175,7 @@ def ExpensesTracker(username):
     bottom_menu.pack(side='bottom', fill='x')
 
     Main_button = Button(bottom_menu, text="Home", font=("Arial", 15, 'bold'), bg='#7e9aed', fg='white',
-                         command=lambda: show_page(MonthPage))
+                         command=back_to_menu)
     Month_button = Button(bottom_menu, text="Expenses Tracker", font=("Arial", 15, 'bold'), bg='#7e9aed', fg='white',
                           command=lambda: show_page(Mainpage))
     Statistic_button = Button(bottom_menu, text="Statistic", font=("Arial", 15, 'bold'), bg='#7e9aed', fg='white',

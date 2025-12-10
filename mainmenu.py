@@ -77,6 +77,7 @@ def mainmenu(username,login_window):
   menu = tk.Tk()
   menu.title("MAIN MENU")
   menu.geometry("500x650")
+  menu.config(background='#f7f2e9')
   login_window.destroy()
 
   tk.Label(menu, text=f"Welcome,{username}!", font=("Arial",18,"bold")).pack(pady=20)
@@ -84,7 +85,7 @@ def mainmenu(username,login_window):
   def createbutton(text,command):
     tk.Button(menu, text=text, width=25, height=2, font=("Arial",16), command=command).pack(pady=10)
 
-  createbutton("Expense Tracker",lambda:ExpensesTracker(username))
+  createbutton("Expense Tracker",lambda:ExpensesTracker(username,menu))
   createbutton("Savings Goal Tracker",lambda:taxwindow(username))
   createbutton("Simple Tax Estimator", lambda:taxwindow())
 
@@ -101,6 +102,12 @@ def loginwindow():
   login.title("LOGIN")
   login.geometry("450x400")
   login.config(background='#f7f2e9')
+
+  try:
+      icon = PhotoImage(file='coin.png')
+      login.iconphoto(True, icon)
+  except:
+      pass
 
   framelogin = tk.Frame(login,bg='#f7f2e9')
   framelogin.pack(fill="x", padx=40, pady=6)
