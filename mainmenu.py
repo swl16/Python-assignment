@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from tax import *
+from tax import taxwindow
 from ExpensesTracker import *
 
 userfile = "user.txt"
@@ -20,11 +20,12 @@ def loadusers():
   return data
 
 # register 
-def registerwindow():
+def registerwindow(login_window):
    register = tk.Toplevel()
    register.title("REGISTER")
    register.geometry("450x400")
    register.config(background='#f7f2e9')
+   login_window.withdraw()
 
    frameregister = tk.Frame(register,bg='#f7f2e9')
    frameregister.pack(fill="x", padx=40, pady=6)
@@ -43,6 +44,10 @@ def registerwindow():
    password_entry = tk.Entry(frameregister_password,width=28,font=("Arial", 11))
    password_entry.pack(side='left')
 
+   def Back_login_page():
+       register.destroy()
+       login_window.deiconify()
+
    def registeruser():
        username = username_entry.get().strip()
        password = password_entry.get().strip()
@@ -60,15 +65,19 @@ def registerwindow():
         saveuser(username,password)
         messagebox.showinfo("Success","Registration successful!")
 
-       register.destroy()
+        Back_login_page()
 
-   tk.Button(register, text="Register", width=15,font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, padx=10, 
-             command=registeruser).pack(anchor='center')
+   Button_frame = Frame(register, bg='#fcf7ed')
+   Button_frame.pack(anchor='center')
 
-def mainmenu(username):
-  menu = tk.Toplevel()
+   tk.Button(Button_frame, text="Register",font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, padx=12, pady=5, command=registeruser).pack(side='left',padx=10)
+   tk.Button(Button_frame, text = "Cancel",font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, padx=12, pady=5, command=Back_login_page).pack(side='left',padx=10)
+
+def mainmenu(username,login_window):
+  menu = tk.Tk()
   menu.title("MAIN MENU")
   menu.geometry("500x650")
+  login_window.destroy()
 
   tk.Label(menu, text=f"Welcome,{username}!", font=("Arial",18,"bold")).pack(pady=20)
 
@@ -77,31 +86,38 @@ def mainmenu(username):
 
   createbutton("Expense Tracker",lambda:ExpensesTracker(username))
   createbutton("Savings Goal Tracker",lambda:taxwindow(username))
-  createbutton("Simple Tax Estimator", lambda:taxwindow(username))
+  createbutton("Simple Tax Estimator", lambda:taxwindow())
+
+  def Log_out():
+      menu.destroy()
+      loginwindow()
   
-  tk.Button(menu, text="Logout", font=("Arial",16), width=10, height=1, fg='black', bg="#ff0000",command=menu.destroy).pack(pady=10, side='bottom', anchor='center')
+  tk.Button(menu, text="Logout", font=("Arial",16), width=10, height=1, fg='black', bg="#ff0000",command=Log_out).pack(pady=10, side='bottom', anchor='center')
+
+  menu.mainloop()
 
 def loginwindow():
   login = tk.Tk()
   login.title("LOGIN")
   login.geometry("450x400")
+  login.config(background='#f7f2e9')
 
-  framelogin = tk.Frame(login)
-  framelogin.pack(fill="x", padx=20, pady=6)
+  framelogin = tk.Frame(login,bg='#f7f2e9')
+  framelogin.pack(fill="x", padx=40, pady=6)
 
   tk.Label(framelogin, text="Login", font=("Arial",18,"bold"), fg='white', bg='#7e9aed',
-                        relief='ridge', bd=2, padx=10, pady=10).pack(fill='x', padx=10, pady=(10,20))
+                        relief='ridge', bd=2, padx=20, pady=20).pack(fill='x', pady=(20,30))
   
-  tk.Label(framelogin, text="Username: ", font=('Arial', 15, 'bold')).pack(side="left")
-  username_entry = tk.Entry(framelogin, width=30,font=("Arial", 11))
-  username_entry.pack(side="left", padx=10)
+  tk.Label(framelogin, text="Username : ", font=('Arial', 15, 'bold'),bg='#f7f2e9').pack(side="left",padx=10)
+  username_entry = tk.Entry(framelogin, width=28,font=("Arial", 11))
+  username_entry.pack(side="left")
 
-  framelogin1 = tk.Frame(login)
-  framelogin1.pack(fill="x", padx=20, pady=6)
+  framelogin_pass = tk.Frame(login,bg='#f7f2e9')
+  framelogin_pass.pack(fill="x", padx=40, pady=(20,50))
 
-  tk.Label(framelogin1, text="Password: ", font=('Arial', 15, 'bold')).pack(side="left")
-  password_entry = tk.Entry(framelogin1,width=30,font=("Arial", 11))
-  password_entry.pack(side="left", padx=10)
+  tk.Label(framelogin_pass, text="Password : ", font=('Arial', 15, 'bold'),bg='#f7f2e9').pack(side="left",padx=10)
+  password_entry = tk.Entry(framelogin_pass,width=28,font=("Arial", 11))
+  password_entry.pack(side="left")
 
   def loginuser():
      username = username_entry.get().strip()
@@ -111,15 +127,19 @@ def loginwindow():
 
      if username in users and users[username] == password:
       messagebox.showinfo("Success","Login successful!")
-      mainmenu(username)
+      mainmenu(username,login)
      else:
       messagebox.showerror("Error","Invalid username or password! Please try again.")
       return
   
-  tk.Button(login, text="Login", width=15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, padx=10, 
-            command=loginuser).pack(pady=(40,10),anchor='center')
-  tk.Button(login, text="Register", width =15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, padx=10, 
-            command=registerwindow).pack(pady=(0,50),anchor='center')
+  tk.Button(login, text="Login", width=15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, padx=10,
+            command=loginuser).pack(pady=(0,10),anchor='center')
+
+  register_frame = tk.Frame(login,bg='#f7f2e9')
+  register_frame.pack(anchor='center')
+
+  tk.Label(register_frame,text="Don't have account?",font=("Arial",11),bg='#f7f2e9').pack(side="left",padx=(10,5))
+  tk.Button(register_frame, text="Register", font=("Arial",11,"underline"), bg='#f7f2e9',fg='#7e9aed', bd=0, relief='flat', command=lambda : registerwindow(login)).pack(side="left")
 
   login.mainloop()
 
