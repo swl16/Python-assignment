@@ -24,23 +24,24 @@ def registerwindow():
    register = tk.Toplevel()
    register.title("REGISTER")
    register.geometry("450x400")
+   register.config(background='#f7f2e9')
 
-   frameregister = tk.Frame(register)
-   frameregister.pack(fill="x", padx=20, pady=6) 
+   frameregister = tk.Frame(register,bg='#f7f2e9')
+   frameregister.pack(fill="x", padx=40, pady=6)
 
    tk.Label(frameregister, text = "Register New Account", font=("Arial",18,"bold"), fg='white', bg='#7e9aed',
-                        relief='ridge', bd=3, padx=20, pady=15).pack(fill='x', padx=20, pady=(20,30))
+                        relief='ridge', bd=3, padx=20, pady=20).pack(fill='x', pady=(20,30))
    
-   tk.Label(frameregister, text="Username:", font=('Arial', 15, 'bold')).pack(side="left")
-   username_entry = tk.Entry(frameregister, width=30,font=("Arial", 11))
-   username_entry.pack(side='left', padx=10)
+   tk.Label(frameregister, text="Username :", font=('Arial', 15, 'bold'),bg='#f7f2e9').pack(side="left",padx=10)
+   username_entry = tk.Entry(frameregister, width=28,font=("Arial", 11))
+   username_entry.pack(side='left')
 
-   frameregister1 = tk.Frame(register)
-   frameregister1.pack(fill="x", padx=20, pady=6)
+   frameregister_password = tk.Frame(register,bg='#f7f2e9')
+   frameregister_password.pack(fill="x", padx=40, pady=(20,50))
 
-   tk.Label(frameregister1, text="Password:", font=('Arial', 15, 'bold')).pack(side="left")
-   password_entry = tk.Entry(frameregister1,width=30,font=("Arial", 11))
-   password_entry.pack(side='left', padx=10)
+   tk.Label(frameregister_password, text="Password :", font=('Arial', 15, 'bold'),bg='#f7f2e9').pack(side="left", padx=10)
+   password_entry = tk.Entry(frameregister_password,width=28,font=("Arial", 11))
+   password_entry.pack(side='left')
 
    def registeruser():
        username = username_entry.get().strip()
@@ -62,7 +63,7 @@ def registerwindow():
        register.destroy()
 
    tk.Button(register, text="Register", width=15,font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, padx=10, 
-             command=registeruser).pack(pady=(40,10),anchor='center')
+             command=registeruser).pack(anchor='center')
 
 def mainmenu(username):
   menu = tk.Toplevel()
