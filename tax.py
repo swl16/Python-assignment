@@ -168,7 +168,7 @@ class taxwindow(tk.Tk):
      except FileNotFoundError:
         textarea.insert("end", "No history file found from this user")
 
-     def deletehistory(tax_estimator):
+     def deletehistory():
       confirm = messagebox.askyesno("Confirm want to delete all calculation history?")
 
       if confirm:
@@ -185,6 +185,6 @@ class taxwindow(tk.Tk):
 
 def runwindow(username = "User"):
    run = taxwindow(username)
-   run.mainloop
+   run.mainloop()
 
 runwindow("TestUser")
