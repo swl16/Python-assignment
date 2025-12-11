@@ -67,7 +67,7 @@ def registerwindow(login_window):
 
         Back_login_page()
 
-   Button_frame = Frame(register, bg='#fcf7ed')
+   Button_frame = Frame(register, bg="#fcf7ed")
    Button_frame.pack(anchor='center')
 
    tk.Button(Button_frame, text="Register",font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, padx=12, pady=5, command=registeruser).pack(side='left',padx=10)
