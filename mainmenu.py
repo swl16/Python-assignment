@@ -80,10 +80,15 @@ def mainmenu(username,login_window):
   menu.config(background='#f7f2e9')
   login_window.destroy()
 
+  def Log_out():
+      menu.destroy()
+      loginwindow()
+
   tk.Label(menu, text=f"Welcome,{username}!", font=("Arial",18,"bold"),bg='#f7f2e9').pack(pady=20)
 
   def createbutton(text,command):
     tk.Button(menu, text=text, width=25, height=2, font=("Arial",16), command=command).pack(pady=10)
+
 
   createbutton("Expense Tracker",lambda:ExpensesTracker(username,menu))
   createbutton("Savings Goal Tracker",lambda:taxwindow(username))
