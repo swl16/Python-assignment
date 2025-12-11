@@ -54,7 +54,7 @@ class TaxEstimatorApp(tk.Tk):
 
         # GUI Setup
         self.title("SIMPLE TAX ESTIMATOR")
-        self.geometry("550x700")
+        self.geometry("700x700")
 
         # Title
         tk.Label(self, text="Simple Tax Estimator", font=("Arial", 18, "bold"),
