@@ -68,9 +68,7 @@ class taxwindow(tk.Tk):
     tk.Button(tax_estimator, text="Calculate Tax", width=15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed',relief='ridge', bd=2, 
            padx=10, command=tax_estimator.runtax).pack(pady=(40,10),anchor='center')
     tk.Button(tax_estimator, text="Calculation History", width=15, font=("Arial",11,'bold'), fg='black',bg='#7e9aed',relief='ridge', bd=2, 
-           padx=10, command=tax_estimator.loadcalhistory).pack(pady=(40,10),anchor='center')
-    tk.Button(tax_estimator, text="Back", width=10, font=("Arial",15,'bold'), fg='black',bg='#7e9aed',relief='ridge', bd=2, 
-           padx=10, command=tax_estimator.destroypage).pack(pady=(40,10),anchor='center')
+           padx=10, command=tax_estimator.loadcalhistory).pack(pady=(40,10),anchor='center',side='bottom')
 
    def frame_input(tax_estimator,result):
       frame = tk.Frame(tax_estimator)
@@ -169,18 +167,25 @@ class taxwindow(tk.Tk):
         textarea.insert("end", "No history file found from this user")
 
      def deletehistory():
-      confirm = messagebox.askyesno("Confirm want to delete all calculation history?")
+      confirm = messagebox.askyesno("Confirm delete all calculation history?")
+     
+      with open(tax_estimator.cal_history, "r") as f:
+         content = f.read()
+         if content.strip() == "":
+             messagebox.showinfo("No History", "No calculation history to delete.")
+             return
+         elif confirm:
+             with open(tax_estimator.cal_history,"w").close():
+              messagebox.showinfo("History Deleted", "Calculation history deleted successfully")
 
-      if confirm:
-        with open(tax_estimator.cal_history,"w") as f:
-           f.close()
-           messagebox.showinfo("History Deleted", "Calculation history deleted successfully")
-
-     tk.Button(history_window, text="Delete History", width=15, font=("Arial",11,'bold'), fg='black',bg='#7e9aed',relief='ridge', bd=2, 
+     tk.Button(history_window, text="Delete History", width=15, font=("Arial",11,'bold'), fg='black',bg="#ff0000",relief='ridge', bd=2, 
            padx=10, command=deletehistory).pack(pady=(40,10),anchor='center')
 
    def destroypage(tax_estimator):
     tax_estimator.destroy()
+
+    tk.Button(tax_estimator, text="Back", width=10, font=("Arial",15,'bold'), fg='black',bg='#7e9aed',relief='ridge', bd=2, 
+           padx=10, command=tax_estimator.destroypage).pack(pady=(40,10),anchor='w',side='left')
 
 
 def runwindow(username = "User"):
