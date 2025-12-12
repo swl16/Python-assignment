@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import messagebox
 from tax import taxwindow
 from ExpensesTracker import *
+from GoalTracker import GoalTrackerApp
+
 
 userfile = "user.txt"
 def saveuser(username,password):
@@ -76,7 +78,7 @@ def registerwindow(login_window):
 def mainmenu(username,login_window):
   menu = tk.Tk()
   menu.title("MAIN MENU")
-  menu.geometry("500x650")
+  menu.geometry("500x450")
   menu.config(background='#f7f2e9')
   login_window.destroy()
 
@@ -87,12 +89,12 @@ def mainmenu(username,login_window):
   tk.Label(menu, text=f"Welcome,{username}!", font=("Arial",18,"bold"),bg='#f7f2e9').pack(pady=20)
 
   def createbutton(text,command):
-    tk.Button(menu, text=text, width=25, height=2, font=("Arial",16), command=command).pack(pady=10)
+    tk.Button(menu, text=text, width=25, height=2, font=("Arial",16), fg='white',bg='#7e9aed', command=command).pack(pady=10)
 
 
-  createbutton("Expense Tracker",lambda:ExpensesTracker(username,menu))
-  createbutton("Savings Goal Tracker",lambda:taxwindow(username))
-  createbutton("Simple Tax Estimator", lambda:taxwindow(username))
+  createbutton("🧾Expense Tracker",lambda:ExpensesTracker(username,menu))
+  createbutton("🎯Savings Goal Tracker",lambda:GoalTrackerApp(username))
+  createbutton("📱Simple Tax Estimator", lambda:taxwindow(username))
   
   tk.Button(menu, text="Logout", font=("Arial",16), width=10, height=1, fg='black', bg="#ff0000",command=Log_out).pack(pady=10, side='bottom', anchor='center')
 
