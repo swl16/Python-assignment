@@ -83,7 +83,7 @@ def ExpensesTracker(username,mainpage):
         date_label = Label(date_frame, text="Date        :", font=('Arial', 15, 'bold'), fg='black', bg='#fcf7ed', width=11, anchor='w')
         date_label.pack(side='left')
 
-        date_picker = DateEntry(date_frame, width=30, font=('Arial', 11), borderwidth=2, date_pattern='dd/mm/yyyy', background='#7e9aed', foreground='white')
+        date_picker = DateEntry(date_frame, width=30, font=('Arial', 11), borderwidth=2, date_pattern='dd/mm/yyyy', background='#7e9aed', foreground='white',state='readonly')
         date_picker.pack(side='left')
 
     #Amount (key in by keyboard)
@@ -571,5 +571,6 @@ def ExpensesTracker(username,mainpage):
 
     window.mainloop()
 
-#username = 'wei'
-#ExpensesTracker(username)
+username = 'wei'
+main = Tk()
+ExpensesTracker(username,main)
