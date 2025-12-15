@@ -151,7 +151,7 @@ def ExpensesTracker(username,mainpage):
         window.destroy()
 
     #Main window
-    window.geometry("500x650")
+    window.geometry("550x700")
     window.title("Expenses Tracker")
     window.config(background='#f7f2e9')
     window.protocol("WM_DELETE_WINDOW", back_to_menu)
@@ -542,7 +542,7 @@ def ExpensesTracker(username,mainpage):
             piechart_sizes = list(category_amount.values())
 
             fig, ax = plt.subplots(figsize=(4, 4), dpi=100)
-            ax.pie(piechart_sizes,labels=piechart_label,autopct="%1.1f%%")
+            ax.pie(piechart_sizes,labels=piechart_label,autopct="%1.1f%%",textprops={'fontsize': 8})
             ax.axis('equal')
             ax.set_title(f"Expenses for {Month}")
 
@@ -570,8 +570,9 @@ def ExpensesTracker(username,mainpage):
 
     refresh_statistics()
 
-    window.mainloop()
+    #window.mainloop()
 
-username = 'wei'
+
+username = 'tang'
 #main = Tk()
 #ExpensesTracker(username,main)
