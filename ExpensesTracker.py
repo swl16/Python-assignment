@@ -188,6 +188,7 @@ class ExpensesTracker:
 
         if not amount_input:
             messagebox.showerror("Error", "Please enter a valid amount.")
+            return
 
         try:
             amount = float(amount_input)
@@ -391,6 +392,7 @@ class ExpensesTracker:
 
         if not amount_input:
             messagebox.showerror("Error", "Please enter a valid amount.")
+            return
 
         try:
             amount = float(amount_input)
@@ -425,7 +427,7 @@ class ExpensesTracker:
             widget.destroy()
 
         if ET.Empty_label:
-            ET.Empty_label.pack_forget()
+            ET.Empty_label.place_forget()
 
         if ET.Check_empty_file():
             return
