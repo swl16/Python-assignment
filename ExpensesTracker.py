@@ -572,5 +572,5 @@ def ExpensesTracker(username,mainpage):
     window.mainloop()
 
 username = 'wei'
-main = Tk()
-ExpensesTracker(username,main)
+#main = Tk()
+#ExpensesTracker(username,main)

@@ -418,4 +418,4 @@ if __name__ == "__main__":
     # Main entry point for the Tkinter application.
     root = tk.Tk()
     app = GoalTrackerApp(root)
-    root.mainloop()
+   # root.mainloop()

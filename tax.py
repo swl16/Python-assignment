@@ -36,11 +36,12 @@ def taxcalculation(chargeable_income):
  
  
 class taxwindow(tk.Tk):
-   def __init__(tax_estimator,username):
+   def __init__(tax_estimator,username,mainmenu):
     super().__init__()
      
     tax_estimator.username = username
     tax_estimator.cal_history = f"{tax_estimator.username}_history.txt"
+    mainmenu.withdraw()
 
     tax_estimator.title("SIMPLE TAX ESTIMATOR")
     tax_estimator.geometry("750x800")
@@ -70,6 +71,10 @@ class taxwindow(tk.Tk):
 
     tk.Button(tax_estimator, text="Calculate Tax", width=15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed', relief='ridge', bd=2, 
               command=tax_estimator.runtax).pack(pady=(40,10),anchor='center')
+    
+    def destroypage(tax_estimator):
+      mainmenu.deiconify()
+      tax_estimator.destroy()
     
     tk.Button(bottom_menu, text="🔙Back", width=10, font=("Arial",15,'bold'), fg='black',bg='#7e9aed', 
            command=tax_estimator.destroypage).pack(side='left', expand=True, fill='both')
@@ -188,10 +193,6 @@ class taxwindow(tk.Tk):
 
      tk.Button(history_window, text="Delete History", width=10, font=("Arial",11,'bold'), fg='black',bg="#ff0000",relief='ridge', bd=2, 
            padx=10, command=deletehistory).pack(pady=(20,10),anchor='e')
-
-   def destroypage(tax_estimator):
-    tax_estimator.destroy()
-
     
    def resetinput(tax_estimator):
       confirm = messagebox.askyesno("Clear All", "Are you sure you want to clear all input fields and output?")
