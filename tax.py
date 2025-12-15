@@ -36,178 +36,183 @@ def taxcalculation(chargeable_income):
  
  
 class taxwindow(tk.Tk):
-   def __init__(tax_estimator,username,mainmenu):
-    super().__init__()
-     
-    tax_estimator.username = username
-    tax_estimator.cal_history = f"{tax_estimator.username}_history.txt"
-    mainmenu.withdraw()
+    def __init__(tax_estimator,username,mainmenu):
+        super().__init__()
 
-    tax_estimator.title("SIMPLE TAX ESTIMATOR")
-    tax_estimator.geometry("750x800")
+        tax_estimator.username = username
+        tax_estimator.mainmenu = mainmenu
+        tax_estimator.cal_history = f"{tax_estimator.username}_history.txt"
+        mainmenu.withdraw()
 
-    #title
-    tk.Label(tax_estimator, text="Simple Tax Estimator", font=("Arial",18,"bold"),fg='white', bg='#7e9aed',
-          relief='ridge', bd=3, padx=20, pady=15).pack(padx=20, pady=(30,20))
- 
-    tax_estimator.income = tax_estimator.frame_input("Annual Income (RM)                                                       : ")
-    tax_estimator.epf = tax_estimator.frame_input("Enter EPF Contribution (RM)                                         : ")
-    tax_estimator.insurance = tax_estimator.frame_input("Enter insurance amount(max RM7000) (RM)                  : ")
-    tax_estimator.edufee = tax_estimator.frame_input("Enter self education fees(max RM7000) (RM)                 : ")
-    tax_estimator.donate = tax_estimator.frame_input("Enter Donation amount (RM)                                         : ")
-    tax_estimator.pcb = tax_estimator.frame_input("Enter the amount of monthly tax deduction(PCB) (RM) : ")
+        tax_estimator.title("SIMPLE TAX ESTIMATOR")
+        tax_estimator.geometry("750x800")
+        tax_estimator.config(background='#f7f2e9')
 
-    frame1 = tk.Frame(tax_estimator)
-    frame1.pack(fill="x", padx=20, pady=6)
+        #title
+        tk.Label(tax_estimator, text="Simple Tax Estimator", font=("Arial",18,"bold"),fg='white', bg='#7e9aed',
+              relief='ridge', bd=3, padx=20, pady=15).pack(padx=20, pady=(30,20))
 
-    tk.Label(frame1, text="Individual Relief (RM) : 9000", font=('Arial',13,'bold')).pack(side='left')
- 
-    #output text
-    tax_estimator.taxoutput = tk.Text(tax_estimator, width=60, height=12,font=("Arial",12))
-    tax_estimator.taxoutput.pack(pady=15)
+        tax_estimator.income = tax_estimator.frame_input("Annual Income (RM)                                                       : ")
+        tax_estimator.epf = tax_estimator.frame_input("Enter EPF Contribution (RM)                                         : ")
+        tax_estimator.insurance = tax_estimator.frame_input("Enter insurance amount(max RM7000) (RM)                  : ")
+        tax_estimator.edufee = tax_estimator.frame_input("Enter self education fees(max RM7000) (RM)                 : ")
+        tax_estimator.donate = tax_estimator.frame_input("Enter Donation amount (RM)                                         : ")
+        tax_estimator.pcb = tax_estimator.frame_input("Enter the amount of monthly tax deduction(PCB) (RM) : ")
 
-    bottom_menu = tk.Frame(tax_estimator, bg='#7e9aed', height=50)
-    bottom_menu.pack(side='bottom', fill='x')
+        frame1 = tk.Frame(tax_estimator,bg='#f7f2e9')
+        frame1.pack(fill="x", padx=20, pady=6)
 
-    tk.Button(tax_estimator, text="Calculate Tax", width=15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed', relief='ridge', bd=2, 
-              command=tax_estimator.runtax).pack(pady=(40,10),anchor='center')
-    
+        tk.Label(frame1, text="Individual Relief (RM) : 9000", font=('Arial',13,'bold'),bg='#f7f2e9').pack(side='left')
+
+        #output text
+        tax_estimator.taxoutput = tk.Text(tax_estimator, width=60, height=12,font=("Arial",12))
+        tax_estimator.taxoutput.pack(pady=15)
+
+        bottom_menu = tk.Frame(tax_estimator, bg='#7e9aed', height=50)
+        bottom_menu.pack(side='bottom', fill='x')
+
+        tk.Button(tax_estimator, text="Calculate Tax", width=15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed', relief='ridge', bd=2,
+                  command=tax_estimator.runtax).pack(pady=(40,10),anchor='center')
+
+
+        tk.Button(bottom_menu, text="🔙Back", width=10, font=("Arial",15,'bold'), fg='black',bg='#7e9aed',
+               command=tax_estimator.destroypage).pack(side='left', expand=True, fill='both')
+        tk.Button(bottom_menu, text="📜Calculation History", width=15, font=("Arial",11,'bold'), fg='black',bg='#7e9aed',
+               command=tax_estimator.loadcalhistory).pack(side='left', expand=True, fill='both')
+        tk.Button(bottom_menu, text="⌫Clear all", width=10, font=("Arial",15,'bold'), fg='black',bg="#ff0000",
+               command=tax_estimator.resetinput).pack(side='left', expand=True, fill='both')
+
     def destroypage(tax_estimator):
-      mainmenu.deiconify()
-      tax_estimator.destroy()
-    
-    tk.Button(bottom_menu, text="🔙Back", width=10, font=("Arial",15,'bold'), fg='black',bg='#7e9aed', 
-           command=tax_estimator.destroypage).pack(side='left', expand=True, fill='both')
-    tk.Button(bottom_menu, text="📜Calculation History", width=15, font=("Arial",11,'bold'), fg='black',bg='#7e9aed', 
-           command=tax_estimator.loadcalhistory).pack(side='left', expand=True, fill='both')
-    tk.Button(bottom_menu, text="⌫Clear all", width=10, font=("Arial",15,'bold'), fg='black',bg="#ff0000", 
-           command=tax_estimator.resetinput).pack(side='left', expand=True, fill='both')
+        tax_estimator.mainmenu.deiconify()
+        tax_estimator.destroy()
 
-   def frame_input(tax_estimator,result):
-      frame = tk.Frame(tax_estimator)
-      frame.pack(fill="x", padx=20, pady=6)
-      tk.Label(frame, text=result, font=("Arial", 13, "bold")).pack(side='left')
-      entry = tk.Entry(frame, width=30, font=('Arial', 11))
-      entry.pack(side='left', padx=10)
+    def frame_input(tax_estimator,result):
+          frame = tk.Frame(tax_estimator,bg='#f7f2e9')
+          frame.pack(fill="x", padx=20, pady=6)
+          tk.Label(frame, text=result, font=("Arial", 13, "bold"),bg='#f7f2e9').pack(side='left')
+          entry = tk.Entry(frame, width=30, font=('Arial', 11))
+          entry.pack(side='left', padx=10)
 
-      return entry
+          return entry
 
-   #calculation
-   def runtax(tax_estimator):
-    
-    for entry in [tax_estimator.income, tax_estimator.pcb, tax_estimator.insurance, tax_estimator.edufee, tax_estimator.donate,tax_estimator.pcb]:
-       if entry.get().strip() == "":
-          messagebox.showerror("Input Error!", "Please fill in ALL fields before calculating.")
-          return
+       #calculation
+    def runtax(tax_estimator):
 
-    try:
-     income = float(tax_estimator.income.get() or 0)
-     epf = float(tax_estimator.epf.get() or 0)
-     insurance = float(tax_estimator.insurance.get() or 0) 
-     education = float(tax_estimator.edufee.get() or 0)
-     donation = float(tax_estimator.donate.get() or 0)
-     pcb = float(tax_estimator.pcb.get() or 0)
-    except ValueError:
-     messagebox.showerror("Error!","Please enter valid numeric values.")
-     return
-    else:
-      if insurance > 7000:
-         messagebox.showerror("Error!", "The Maximum amount for insurance is RM7000. Please try again")
+        for entry in [tax_estimator.income, tax_estimator.pcb, tax_estimator.insurance, tax_estimator.edufee, tax_estimator.donate,tax_estimator.pcb]:
+           if entry.get().strip() == "":
+              messagebox.showerror("Input Error!", "Please fill in ALL fields before calculating.")
+              return
+
+        try:
+         income = float(tax_estimator.income.get() or 0)
+         epf = float(tax_estimator.epf.get() or 0)
+         insurance = float(tax_estimator.insurance.get() or 0)
+         education = float(tax_estimator.edufee.get() or 0)
+         donation = float(tax_estimator.donate.get() or 0)
+         pcb = float(tax_estimator.pcb.get() or 0)
+        except ValueError:
+         messagebox.showerror("Error!","Please enter valid numeric values.")
          return
-      elif education > 7000:
-         messagebox.showerror("Error!", "The Maximum amount for education fee is RM7000. Please try again")
-         return
-        
-    individual = 9000.00
-    taxrelief = individual + epf + insurance + education
-    chargeable_income = income - taxrelief - donation
-
-    tax = taxcalculation(chargeable_income)
-
-    match True:
-       case _ if chargeable_income <= 35000:
-           rebate = 400.0
-       case _:
-          rebate = 0.0
-
-    taxpayable = tax - rebate
-
-    totalpcb = pcb * 12
-
-    tax_estimator.taxoutput.delete("1.0", "end")
-    result = (f"Annual Income: RM {income:.2f}\n"
-              f"Total Tax Relief (included Individual) : RM {taxrelief:.2f}\n"
-              f"Chargeable Income : RM {chargeable_income:.2f}\n"
-              f"Estimated Income Tax : RM {tax:.2f}\n"
-              f"Eligible Rebate : RM {rebate:.2f}\n"
-              f"Estimated Income Tax Payable : RM {taxpayable:.2f}\n"
-              f"Total PCB (12 Months) : RM {totalpcb:.2f}\n")
-    tax_estimator.taxoutput.insert("end", result)
-    if taxpayable > totalpcb:
-      tax_estimator.taxoutput.insert("end", "❗Tax payable > PCB. There is insufficient tax payment.")
-    else:
-      tax_estimator.taxoutput.insert("end", "✔ Tax payable < PCB. There is excess deduction. You get refund.")
-
-    tax_estimator.savecalhistory(result)
-
-   def savecalhistory(tax_estimator, text):
-    with open(tax_estimator.cal_history,"a") as f:
-      f.write(text + "\n" + "-" * 50 + "\n")
-
-   def loadcalhistory(tax_estimator):
-     history_window = tk.Toplevel(tax_estimator)
-     history_window.title(f"Calculation History")
-     history_window.geometry("500x750")
-
-     # create a scrollbar
-     scrollbar = tk.Scrollbar(history_window)
-     scrollbar.pack(fill='y', side='right')
-
-     textarea = tk.Text(history_window, width=65, height=35, font=("Arial",13), yscrollcommand=scrollbar.set)
-     textarea.pack(padx=10, pady=10)
-     
-     #update the scrollbar, users can scroll vertically
-     scrollbar.config(command=textarea.yview)
-
-     try:
-        with open(tax_estimator.cal_history, "r") as f:
-           content = f.read()
-           if content.strip() == "":
-              textarea.insert("end", "No calculation history found")
-           else:
-              textarea.insert("end", content)
-     except FileNotFoundError:
-        textarea.insert("end", "No history file found from this user")
-
-     def deletehistory():
-      confirm = messagebox.askyesno("Delete Calculation History","Confirm delete all calculation history?")
-     
-      with open(tax_estimator.cal_history, "r") as f:
-         content = f.read()
-         if content.strip() == "":
-             messagebox.showinfo("No History", "No calculation history to delete.")
+        else:
+          if insurance > 7000:
+             messagebox.showerror("Error!", "The Maximum amount for insurance is RM7000. Please try again")
              return
-         elif confirm:
-             with open(tax_estimator.cal_history,"w"):
-              messagebox.showinfo("History Deleted", "Calculation history deleted successfully")
+          elif education > 7000:
+             messagebox.showerror("Error!", "The Maximum amount for education fee is RM7000. Please try again")
+             return
 
-     tk.Button(history_window, text="Delete History", width=10, font=("Arial",11,'bold'), fg='black',bg="#ff0000",relief='ridge', bd=2, 
-           padx=10, command=deletehistory).pack(pady=(20,10),anchor='e')
-    
-   def resetinput(tax_estimator):
-      confirm = messagebox.askyesno("Clear All", "Are you sure you want to clear all input fields and output?")
-      if confirm:
-       for entry in[tax_estimator.income, tax_estimator.epf, tax_estimator.insurance, tax_estimator.edufee, tax_estimator.donate, tax_estimator.pcb]:
-         entry.delete(0,'end')
+        individual = 9000.00
+        taxrelief = individual + epf + insurance + education
+        chargeable_income = income - taxrelief - donation
 
-       if entry.get().strip() == "":
-            messagebox.showinfo("No Input", "No input to clear.")
-            return
+        tax = taxcalculation(chargeable_income)
 
-      tax_estimator.taxoutput.delete("1.0","end")
+        match True:
+           case _ if chargeable_income <= 35000:
+               rebate = 400.0
+           case _:
+              rebate = 0.0
+
+        taxpayable = tax - rebate
+
+        totalpcb = pcb * 12
+
+        tax_estimator.taxoutput.delete("1.0", "end")
+        result = (f"Annual Income: RM {income:.2f}\n"
+                  f"Total Tax Relief (included Individual) : RM {taxrelief:.2f}\n"
+                  f"Chargeable Income : RM {chargeable_income:.2f}\n"
+                  f"Estimated Income Tax : RM {tax:.2f}\n"
+                  f"Eligible Rebate : RM {rebate:.2f}\n"
+                  f"Estimated Income Tax Payable : RM {taxpayable:.2f}\n"
+                  f"Total PCB (12 Months) : RM {totalpcb:.2f}\n")
+        tax_estimator.taxoutput.insert("end", result)
+        if taxpayable > totalpcb:
+          tax_estimator.taxoutput.insert("end", "❗Tax payable > PCB. There is insufficient tax payment.")
+        else:
+          tax_estimator.taxoutput.insert("end", "✔ Tax payable < PCB. There is excess deduction. You get refund.")
+
+        tax_estimator.savecalhistory(result)
+
+    def savecalhistory(tax_estimator, text):
+        with open(tax_estimator.cal_history,"a") as f:
+          f.write(text + "\n" + "-" * 50 + "\n")
+
+    def loadcalhistory(tax_estimator):
+         history_window = tk.Toplevel(tax_estimator)
+         history_window.title(f"Calculation History")
+         history_window.geometry("500x750")
+
+         # create a scrollbar
+         scrollbar = tk.Scrollbar(history_window)
+         scrollbar.pack(fill='y', side='right')
+
+         textarea = tk.Text(history_window, width=65, height=35, font=("Arial",13), yscrollcommand=scrollbar.set)
+         textarea.pack(padx=10, pady=10)
+
+         #update the scrollbar, users can scroll vertically
+         scrollbar.config(command=textarea.yview)
+
+         try:
+            with open(tax_estimator.cal_history, "r") as f:
+               content = f.read()
+               if content.strip() == "":
+                  textarea.insert("end", "No calculation history found")
+               else:
+                  textarea.insert("end", content)
+         except FileNotFoundError:
+            textarea.insert("end", "No history file found from this user")
+
+         def deletehistory():
+          confirm = messagebox.askyesno("Delete Calculation History","Confirm delete all calculation history?")
+
+          with open(tax_estimator.cal_history, "r") as f:
+             content = f.read()
+             if content.strip() == "":
+                 messagebox.showinfo("No History", "No calculation history to delete.")
+                 return
+             elif confirm:
+                 with open(tax_estimator.cal_history,"w"):
+                  messagebox.showinfo("History Deleted", "Calculation history deleted successfully")
+
+         tk.Button(history_window, text="Delete History", width=10, font=("Arial",11,'bold'), fg='black',bg="#ff0000",relief='ridge', bd=2,
+               padx=10, command=deletehistory).pack(pady=(20,10),anchor='e')
+
+    def resetinput(tax_estimator):
+          confirm = messagebox.askyesno("Clear All", "Are you sure you want to clear all input fields and output?")
+          if confirm:
+           for entry in[tax_estimator.income, tax_estimator.epf, tax_estimator.insurance, tax_estimator.edufee, tax_estimator.donate, tax_estimator.pcb]:
+             entry.delete(0,'end')
+
+           if entry.get().strip() == "":
+                messagebox.showinfo("No Input", "No input to clear.")
+                return
+
+          tax_estimator.taxoutput.delete("1.0","end")
+
 
 def runprogram(username):
-   run = taxwindow(username)
-   run.mainloop()
+    mainmenu = tk.Tk()
+    run = taxwindow(username,mainmenu)
+    run.mainloop()
 
 #runprogram("")

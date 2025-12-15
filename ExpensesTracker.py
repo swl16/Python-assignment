@@ -174,7 +174,7 @@ def ExpensesTracker(username,mainpage):
     bottom_menu = Frame(window, bg='#7e9aed', height=90)
     bottom_menu.pack(side='bottom', fill='x')
 
-    Main_button = Button(bottom_menu, text="Home", font=("Arial", 15, 'bold'), bg='#7e9aed', fg='white',
+    Main_button = Button(bottom_menu, text="< Back", font=("Arial", 15, 'bold'), bg='#7e9aed', fg='white',
                          command=back_to_menu)
     Month_button = Button(bottom_menu, text="Expenses Tracker", font=("Arial", 15, 'bold'), bg='#7e9aed', fg='white',
                           command=lambda: show_page(Mainpage))
@@ -572,5 +572,5 @@ def ExpensesTracker(username,mainpage):
     window.mainloop()
 
 username = 'wei'
-#main = Tk()
-#ExpensesTracker(username,main)
+main = Tk()
+ExpensesTracker(username,main)

@@ -109,10 +109,14 @@ class WorldClock(ttk.Frame):
                                     background='#b3e5fc', # Secondary blue
                                     padding=5)
         self.time_label.pack(fill='x', padx=10, pady=5)
-        
+
+        self.timer_id = None
         self.update_time()
 
     def update_time(self):
+        if not self.winfo_exists():
+            return
+
         # Get current time and convert it to Malaysia Time (GMT+8)
         now_utc = datetime.datetime.now(datetime.timezone.utc)
         malaysia_time = now_utc.astimezone(MALAYSIA_TIMEZONE_OFFSET)
@@ -125,15 +129,27 @@ class WorldClock(ttk.Frame):
         self.time_label.config(text=display_text)
         
         # Schedule the update every 1000 milliseconds (1 second)
-        self.after(1000, self.update_time)
+        self.timer_id = self.after(1000, self.update_time)
+
+    def stop(self):
+        if self.timer_id:
+            self.after_cancel(self.timer_id)
+            self.timer_id = None
 
 
 # --- Tkinter GUI Application Class ---
 
 class GoalTrackerApp:
-    def __init__(self, master):
-        self.master = master
-        master.title(f"Savings Goal Tracker ({CURRENCY_SYMBOL})")
+    def __init__(self, username, mainmenu):
+
+        self.username = username
+        self.mainmenu = mainmenu
+        self.mainmenu.withdraw()
+
+        self.master = tk.Tk()
+
+
+        self.master.title(f"Savings Goal Tracker ({CURRENCY_SYMBOL})")
         
         # Chapter 5B: Dictionaries (The primary data structure for goals)
         self.goals = load_goals()
@@ -179,8 +195,14 @@ class GoalTrackerApp:
 
 
         # --- Main Frame ---
-        self.main_frame = ttk.Frame(master, padding="15 15 15 15", relief='raised', borderwidth=2)
+        self.main_frame = ttk.Frame(self.master, padding="15 15 15 15", relief='raised', borderwidth=2)
         self.main_frame.pack(fill='both', expand=True)
+
+        self.back_frame = ttk.Frame(self.main_frame, style='TFrame')
+        self.back_frame.pack(fill='x',padx=20,pady=(10,0))
+
+        back_button = ttk.Button(self.back_frame,text = "< Back",command=self.back_menu)
+        back_button.pack(side="left")
 
         # --- Top Control Panel (Title and Clock) ---
         self.top_panel = ttk.Frame(self.main_frame, style='TFrame')
@@ -235,6 +257,13 @@ class GoalTrackerApp:
 
         # Initial data load and display.
         self.refresh_goal_list()
+
+    def back_menu(self):
+        if hasattr(self, 'clock'):
+            self.clock.stop()
+
+        self.mainmenu.deiconify()
+        self.master.destroy()
 
     def refresh_goal_list(self):
         # Chapter 5A: Lists (Traversing of Lists and clearing Treeview)
@@ -414,8 +443,3 @@ class GoalTrackerApp:
             messagebox.showinfo("Success", f"Goal '{goal['name']}' successfully deleted.")
 
 
-if __name__ == "__main__":
-    # Main entry point for the Tkinter application.
-    root = tk.Tk()
-    app = GoalTrackerApp(root)
-   # root.mainloop()

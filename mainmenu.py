@@ -83,6 +83,9 @@ def mainmenu(username,login_window):
   login_window.destroy()
 
   def Log_out():
+      if not messagebox.askyesno(title='Confirm to Log Out', message='Are you sure you want to log out?'):
+          return
+
       menu.destroy()
       loginwindow()
 
@@ -93,7 +96,7 @@ def mainmenu(username,login_window):
 
 
   createbutton("🧾Expense Tracker",lambda:ExpensesTracker(username,menu))
-  createbutton("🎯Savings Goal Tracker",lambda:GoalTrackerApp(username))
+  createbutton("🎯Savings Goal Tracker",lambda:GoalTrackerApp(username,menu))
   createbutton("📱Simple Tax Estimator", lambda:taxwindow(username,menu))
   
   tk.Button(menu, text="Logout", font=("Arial",16), width=10, height=1, fg='black', bg="#ff0000",command=Log_out).pack(pady=10, side='bottom', anchor='center')
