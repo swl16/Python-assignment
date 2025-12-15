@@ -29,6 +29,12 @@ def registerwindow(login_window):
    register.config(background='#f7f2e9')
    login_window.withdraw()
 
+   def Back_login_page():
+       register.destroy()
+       login_window.deiconify()
+
+   register.protocol("WM_DELETE_WINDOW", Back_login_page)
+
    frameregister = tk.Frame(register,bg='#f7f2e9')
    frameregister.pack(fill="x", padx=40, pady=6)
 
@@ -45,10 +51,6 @@ def registerwindow(login_window):
    tk.Label(frameregister_password, text="Password :", font=('Arial', 15, 'bold'),bg='#f7f2e9').pack(side="left", padx=10)
    password_entry = tk.Entry(frameregister_password,width=28,font=("Arial", 11))
    password_entry.pack(side='left')
-
-   def Back_login_page():
-       register.destroy()
-       login_window.deiconify()
 
    def registeruser():
        username = username_entry.get().strip()

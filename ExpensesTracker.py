@@ -154,6 +154,7 @@ def ExpensesTracker(username,mainpage):
     window.geometry("500x650")
     window.title("Expenses Tracker")
     window.config(background='#f7f2e9')
+    window.protocol("WM_DELETE_WINDOW", back_to_menu)
 
     try:
         icon = PhotoImage(file='coin.png')
@@ -572,5 +573,5 @@ def ExpensesTracker(username,mainpage):
     window.mainloop()
 
 username = 'wei'
-main = Tk()
-ExpensesTracker(username,main)
+#main = Tk()
+#ExpensesTracker(username,main)

@@ -147,7 +147,7 @@ class GoalTrackerApp:
         self.mainmenu.withdraw()
 
         self.master = tk.Tk()
-
+        self.master.protocol("WM_DELETE_WINDOW", self.back_menu)
 
         self.master.title(f"Savings Goal Tracker ({CURRENCY_SYMBOL})")
         
@@ -159,9 +159,9 @@ class GoalTrackerApp:
         style.theme_use('clam')
         
         # Define light blue colors
-        PRIMARY_BLUE = '#e0f7fa'  # Very light cyan/blue for background
+        PRIMARY_BLUE = '#f7f2e9'
         SECONDARY_BLUE = '#b3e5fc' # Slightly darker blue for frames/buttons
-        ACCENT_BLUE = '#4fc3f7'   # A nice accent blue
+        ACCENT_BLUE = '#7e9aed'   # A nice accent blue
         
         # Configure the main frame background
         style.configure('TFrame', background=PRIMARY_BLUE)

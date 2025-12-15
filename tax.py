@@ -44,6 +44,8 @@ class taxwindow(tk.Tk):
         tax_estimator.cal_history = f"{tax_estimator.username}_history.txt"
         mainmenu.withdraw()
 
+        tax_estimator.protocol("WM_DELETE_WINDOW", tax_estimator.destroypage)
+
         tax_estimator.title("SIMPLE TAX ESTIMATOR")
         tax_estimator.geometry("750x800")
         tax_estimator.config(background='#f7f2e9')
