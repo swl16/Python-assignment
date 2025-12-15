@@ -101,7 +101,7 @@ def mainmenu(username,login_window):
   createbutton("🎯Savings Goal Tracker",lambda:GoalTrackerApp(username,menu))
   createbutton("📱Simple Tax Estimator", lambda:taxwindow(username,menu))
   
-  tk.Button(menu, text="Logout", font=("Arial",16), width=10, height=1, fg='black', bg="#ff0000",command=Log_out).pack(pady=10, side='bottom', anchor='center')
+  tk.Button(menu, text="Logout", font=("Arial",16), width=10, height=1, fg='white', bg="#ff0000",command=Log_out).pack(pady=10, side='bottom', anchor='center')
 
   menu.mainloop()
 
