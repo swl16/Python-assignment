@@ -76,6 +76,7 @@ class taxwindow(tk.Tk):
  
     #output text
     tax_estimator.taxoutput = tk.Text(tax_estimator, width=60, height=12,font=("Arial",12))
+    tax_estimator.taxoutput.config(state="disabled")
     tax_estimator.taxoutput.pack(pady=15)
     
     #bottom menu frame
@@ -154,7 +155,8 @@ class taxwindow(tk.Tk):
     taxpayable = tax - rebate
 
     totalpcb = pcb * 12
-    
+
+    tax_estimator.taxoutput.config(state="normal")
     #display results
     tax_estimator.taxoutput.delete("1.0", "end")
     result = (f"Annual Income: RM {income:.2f}\n"
@@ -169,6 +171,8 @@ class taxwindow(tk.Tk):
       tax_estimator.taxoutput.insert("end", "❗Tax payable > PCB. There is insufficient tax payment.")
     else:
       tax_estimator.taxoutput.insert("end", "✔ Tax payable < PCB. There is excess deduction. You get refund.")
+
+    tax_estimator.taxoutput.config(state="disabled") #user cannot edit the result
     
     #save result to history file
     tax_estimator.savecalhistory(result)
@@ -203,6 +207,8 @@ class taxwindow(tk.Tk):
               textarea.insert("end", content)
      except FileNotFoundError:
         textarea.insert("end", "No history file found from this user")
+
+     textarea.config(state="disabled")
 
      def deletehistory():
       confirm = messagebox.askyesno("Delete Calculation History","Confirm delete all calculation history?")
@@ -246,9 +252,12 @@ class taxwindow(tk.Tk):
            for entry in [tax_estimator.income, tax_estimator.epf, tax_estimator.insurance,
                          tax_estimator.edufee, tax_estimator.donate, tax_estimator.pcb]:
                entry.delete(0, 'end')
-
+           tax_estimator.taxoutput.config(state="normal")
            # Clear output field
            tax_estimator.taxoutput.delete("1.0", "end")
+
+           tax_estimator.taxoutput.config(state="disabled")
+
 
 #run program function
 def runprogram(username):
