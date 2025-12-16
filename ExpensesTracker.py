@@ -218,6 +218,7 @@ class ExpensesTracker:
 
         amount = f"{amount:.2f}"
 
+        #append the record to file
         with open(f'{ET.Username}/expenses_record.csv', 'a', newline='', encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerow([date_input, amount, category_input, remark_input])
@@ -241,7 +242,6 @@ class ExpensesTracker:
         ET.mainpage.deiconify()
         ET.window.destroy()
 
-
     def Check_empty_file(ET):
         try:
             if ET.Empty_label:
@@ -251,6 +251,7 @@ class ExpensesTracker:
 
         data = ET.read_expenses()
 
+        #if no data show label
         if not data:
             ET.Empty_label = Label(ET.Mainpage, text="There is no record yet...", font=('Arial', 15, 'bold'), fg='#7e9aed',
                                 bg='#f7f2e9')
@@ -264,18 +265,19 @@ class ExpensesTracker:
         data = ET.read_expenses()
 
         for row in data:
-            total += float(row[1])
+            total += float(row[1]) #add all expenses in the record
 
         total_label = Label(ET.total_frame,text=f"Total expenses : RM{total:.2f}",font=('Arial', 18, 'bold'),bg='#7e9aed',fg='white',relief='ridge', bd=3,padx=40,pady=15)
         total_label.place(anchor='center', relx=0.5, rely=0.5)
 
     def read_expenses(ET):
-        os.makedirs(ET.Username,exist_ok=True)
+        os.makedirs(ET.Username,exist_ok=True) #check if there is a folder for the username, if no create one
 
         if not os.path.exists(f'{ET.Username}/expenses_record.csv') or os.path.getsize(f'{ET.Username}/expenses_record.csv') == 0:
             return []
 
         try:
+            #read the file of the specific user
             with open(f'{ET.Username}/expenses_record.csv', "r", encoding='utf-8') as file:
                 reader = csv.reader(file)
                 data = [row for row in reader if row]
@@ -335,7 +337,7 @@ class ExpensesTracker:
         ET.date_picker = DateEntry(date_frame, width=30, font=('Arial', 11), borderwidth=2, date_pattern='dd/mm/yyyy',
                                 background='#7e9aed', foreground='white')
         ET.date_picker.delete(0, 'end')
-        ET.date_picker.insert(0,ET.data[ET.index][0])
+        ET.date_picker.insert(0,ET.data[ET.index][0]) #insert previous data
         ET.date_picker.pack(side='left')
 
         # Amount (key in by keyboard)
@@ -509,6 +511,7 @@ class ExpensesTracker:
         return pie_data, month
 
     def show_pie_chart(ET,Month):
+        #show the statistic using pie chart
         selected_month = Month
 
         pie_data, _ = ET.Get_month_data()
