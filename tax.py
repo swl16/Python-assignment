@@ -84,13 +84,13 @@ class taxwindow(tk.Tk):
               command=tax_estimator.runtax).pack(pady=(40,10),anchor='center')
     
     #destroy tax window and return to main menu
-    def destroypage(tax_estimator):
+    def destroypage(tax_estimator,mainmenu):
       mainmenu.deiconify()
       tax_estimator.destroy()
     
     #buttons in bottom menu
     tk.Button(bottom_menu, text="🔙Back", width=10, font=("Arial",15,'bold'), fg='black',bg='#7e9aed', 
-           command=tax_estimator.destroypage).pack(side='left', expand=True, fill='both')
+           command=destroypage).pack(side='left', expand=True, fill='both')
     tk.Button(bottom_menu, text="📜Calculation History", width=15, font=("Arial",11,'bold'), fg='black',bg='#7e9aed', 
            command=tax_estimator.loadcalhistory).pack(side='left', expand=True, fill='both')
     tk.Button(bottom_menu, text="⌫Clear all", width=10, font=("Arial",15,'bold'), fg='black',bg="#ff0000", 
