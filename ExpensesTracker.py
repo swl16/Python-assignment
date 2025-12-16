@@ -7,6 +7,7 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+#class include the whole module
 class ExpensesTracker:
     def __init__(ET, username,mainpage): #ET = Expenses Tracker
         ET.window = Tk()
@@ -15,13 +16,14 @@ class ExpensesTracker:
         ET.Empty_label = None
         ET.Category = ('Food', 'Household', 'Health', 'Beauty', 'Entertainment', 'Other')
 
+        #close the main menu page
         ET.mainpage.withdraw()
 
-    #Main window
+        #Main window
         ET.window.geometry("550x700")
         ET.window.title("Expenses Tracker")
         ET.window.config(background='#f7f2e9')
-        ET.window.protocol("WM_DELETE_WINDOW", ET.back_to_menu)
+        ET.window.protocol("WM_DELETE_WINDOW", ET.back_to_menu)  #if the user press x above the window, it will back to main menu page
 
         try:
             icon = PhotoImage(file='coin.png')
@@ -29,6 +31,7 @@ class ExpensesTracker:
         except:
             pass
 
+        #Frame of the whole window
         Container = Frame(ET.window)
         Container.pack(fill='both', expand=True)
 
@@ -36,9 +39,11 @@ class ExpensesTracker:
         ET.MonthPage = Frame(Container, bg='#f7f2e9')
         ET.Statistic_page = Frame(Container, bg='#f7f2e9')
 
+        #make sure all the frame same position
         for frame in (ET.Mainpage, ET.MonthPage, ET.Statistic_page):
             frame.place(relx=0, rely=0, relwidth=1, relheight=1)
 
+        #bottom menu button
         bottom_menu = Frame(ET.window, bg='#7e9aed', height=90)
         bottom_menu.pack(side='bottom', fill='x')
 
@@ -53,15 +58,17 @@ class ExpensesTracker:
         show_record_button.pack(side="left", expand=True, fill="both")
         Statistic_button.pack(side="left", expand=True, fill="both")
 
+        #show expenses tracker
         ET.show_page(ET.Mainpage)
 
-        #Main Page
+        #Expenses Tracker Page
         ET.total_frame = Frame(ET.Mainpage, bg='#f7f2e9',height=80)
         ET.total_frame.pack(fill='x',pady=(10, 0),padx=20)
 
         main_frame = Frame(ET.Mainpage, bg='#f7f2e9')
         main_frame.pack(fill='both', expand=True, padx=20, pady=(0, 10))
 
+        #Scoll bar to see all the expenses
         main_canvas = Canvas(main_frame, bg='#f7f2e9', highlightthickness=0)
         scrollbar = Scrollbar(main_frame, orient="vertical", command=main_canvas.yview)
         ET.scrollPage = Frame(main_canvas, bg='#f7f2e9')
@@ -74,13 +81,14 @@ class ExpensesTracker:
         main_canvas.pack(side="left", expand=True, fill="both")
         scrollbar.pack(side="right", fill="y")
 
+        #Add Button
         Button(ET.Mainpage, text='+', font=('Arial', 20, 'bold'), bg='#7e9aed', fg='white', width=3, height=1,
                command=ET.add_new_expenses).pack(side="bottom", anchor="e", padx=20, pady=(10,20))
 
-        ET.Check_empty_file()
-        ET.refresh_mainpage()
+        ET.Check_empty_file() #check the file, if empty show label
+        ET.refresh_mainpage() #show record (if have)
 
-        # Statistic
+        # Statistic page
         Title_label = Label(ET.Statistic_page, text='Monthly Statistics', font=('Arial', 18, 'bold'), fg='white',
                             bg='#7e9aed', relief='ridge', bd=3, padx=20, pady=15)
         Title_label.pack(fill='x', padx=20, pady=(30, 20))
@@ -92,7 +100,7 @@ class ExpensesTracker:
         ET.in_frame.pack(padx=30, pady=30, fill='both', expand=True)
 
         ET.select_month = None
-        ET.refresh_statistics()
+        ET.refresh_statistics()  #show statistic
 
     def add_new_expenses(ET):
     #window for this page
@@ -101,6 +109,7 @@ class ExpensesTracker:
         ET.expenses.title('Expenses Tracker')
         ET.window.withdraw()
         ET.expenses.config(background='#f7f2e9')
+        ET.expenses.protocol("WM_DELETE_WINDOW", ET.back_to_mainmenu)  #user can back to showing record page if press x button above
 
     #Main Title
         title_label = Label(ET.expenses, text="Expenses Tracker", font=('Arial', 18, 'bold'), fg='white', bg='#7e9aed',
@@ -109,7 +118,7 @@ class ExpensesTracker:
                             )
         title_label.pack(fill='x', padx=20, pady=(20,30))
 
-    #Form a frame which can  let arrangement become easier
+    #Form a frame which can let arrangement become easier
         form_frame = Frame(ET.expenses, bg='#fcf7ed', relief='ridge', bd=2)
         form_frame.pack(padx=20, pady=10, fill='both', expand=True)
 
@@ -153,7 +162,7 @@ class ExpensesTracker:
 
         ET.category_combobox.pack(side='left')
 
-    #Remark made by user (Key in by keyboard)
+    #Remark made by user (Key in by keyboard) (can be empty)
         remark_frame = Frame(inner_frame, bg='#fcf7ed')
         remark_frame.pack(fill='x',pady=(0,20))
 
@@ -181,15 +190,18 @@ class ExpensesTracker:
         Bottom_frame.pack(fill='x',pady=20)
 
     def Get_user_input(ET):
+        #Read all user input
         date_input = ET.date_picker.get()
         amount_input = ET.amount_enter.get().strip()
         category_input = ET.category_combobox.get()
         remark_input = ET.remark_entry.get("1.0", "end-1c").strip()
 
+        #check if it is empty
         if not amount_input:
             messagebox.showerror("Error", "Please enter a valid amount.")
             return
 
+        #check input error
         try:
             amount = float(amount_input)
             if amount <= 0:
@@ -202,16 +214,18 @@ class ExpensesTracker:
             messagebox.showerror('Error', 'Please select a category.')
             return
 
+        #format to 2 decimal point
+
         amount = f"{amount:.2f}"
 
         with open(f'{ET.Username}/expenses_record.csv', 'a', newline='', encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerow([date_input, amount, category_input, remark_input])
 
+        ET.back_to_mainmenu()
         ET.refresh_mainpage()
         ET.refresh_statistics()
         messagebox.showinfo("Success!", "Your expense is added!")
-        ET.back_to_mainmenu()
 
     def back_to_mainmenu(ET):
         ET.expenses.destroy()
@@ -294,6 +308,7 @@ class ExpensesTracker:
         ET.expenses.title('Edit Expense')
         ET.window.withdraw()
         ET.expenses.config(background='#f7f2e9')
+        ET.expenses.protocol("WM_DELETE_WINDOW", ET.back_to_mainmenu)
 
         # Main Title
         title_label = Label(ET.expenses, text="Expenses Tracker", font=('Arial', 18, 'bold'), fg='white', bg='#7e9aed',
@@ -414,10 +429,10 @@ class ExpensesTracker:
             writer = csv.writer(file)
             writer.writerows(ET.data)
 
+        ET.back_to_mainmenu()
         ET.refresh_mainpage()
         ET.refresh_statistics()
         messagebox.showinfo("Success!", "Your expense is edited successfully!")
-        ET.back_to_mainmenu()
 
     def refresh_mainpage(ET):
         ET.Check_empty_file()
@@ -427,7 +442,7 @@ class ExpensesTracker:
             widget.destroy()
 
         if ET.Empty_label:
-            ET.Empty_label.place_forget()
+            ET.Empty_label.pack_forget()
 
         if ET.Check_empty_file():
             return

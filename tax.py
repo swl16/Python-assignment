@@ -47,11 +47,14 @@ class taxwindow(tk.Tk):
     tax_estimator.cal_history = f"{tax_estimator.username}_history.txt"
 
     #hide main menu window
+    tax_estimator.mainmenu = mainmenu
     mainmenu.withdraw()
 
     #window settings
     tax_estimator.title("SIMPLE TAX ESTIMATOR")
     tax_estimator.geometry("750x800")
+    tax_estimator.protocol("WM_DELETE_WINDOW", tax_estimator.destroypage)
+    tax_estimator.config(background='#f7f2e9')
 
     #title
     tk.Label(tax_estimator, text="Simple Tax Estimator", font=("Arial",18,"bold"),fg='white', bg='#7e9aed',
@@ -66,10 +69,10 @@ class taxwindow(tk.Tk):
     tax_estimator.pcb = tax_estimator.frame_input("Enter the amount of monthly tax deduction(PCB) (RM) : ")
     
     #frame for individual relief info
-    frame1 = tk.Frame(tax_estimator)
+    frame1 = tk.Frame(tax_estimator,bg='#f7f2e9')
     frame1.pack(fill="x", padx=20, pady=6)
 
-    tk.Label(frame1, text="Individual Relief (RM) : 9000", font=('Arial',13,'bold')).pack(side='left')
+    tk.Label(frame1, text="Individual Relief (RM) : 9000", font=('Arial',13,'bold'),bg='#f7f2e9').pack(side='left')
  
     #output text
     tax_estimator.taxoutput = tk.Text(tax_estimator, width=60, height=12,font=("Arial",12))
@@ -83,24 +86,24 @@ class taxwindow(tk.Tk):
     tk.Button(tax_estimator, text="Calculate Tax", width=15, font=("Arial",15,'bold'), fg='white',bg='#7e9aed', relief='ridge', bd=2, 
               command=tax_estimator.runtax).pack(pady=(40,10),anchor='center')
     
-    #destroy tax window and return to main menu
-    def destroypage(tax_estimator,mainmenu):
-      mainmenu.deiconify()
-      tax_estimator.destroy()
-    
     #buttons in bottom menu
     tk.Button(bottom_menu, text="🔙Back", width=10, font=("Arial",15,'bold'), fg='black',bg='#7e9aed', 
-           command=destroypage).pack(side='left', expand=True, fill='both')
+           command=tax_estimator.destroypage).pack(side='left', expand=True, fill='both')
     tk.Button(bottom_menu, text="📜Calculation History", width=15, font=("Arial",11,'bold'), fg='black',bg='#7e9aed', 
            command=tax_estimator.loadcalhistory).pack(side='left', expand=True, fill='both')
     tk.Button(bottom_menu, text="⌫Clear all", width=10, font=("Arial",15,'bold'), fg='black',bg="#ff0000", 
            command=tax_estimator.resetinput).pack(side='left', expand=True, fill='both')
-   
+
+    # destroy tax window and return to main menu
+   def destroypage(tax_estimator):
+        tax_estimator.mainmenu.deiconify()
+        tax_estimator.destroy()
+
    #input frame function
    def frame_input(tax_estimator,result):
-      frame = tk.Frame(tax_estimator)
+      frame = tk.Frame(tax_estimator,bg='#f7f2e9')
       frame.pack(fill="x", padx=20, pady=6)
-      tk.Label(frame, text=result, font=("Arial", 13, "bold")).pack(side='left')
+      tk.Label(frame, text=result, font=("Arial", 13, "bold"),bg='#f7f2e9').pack(side='left')
       entry = tk.Entry(frame, width=30, font=('Arial', 11))
       entry.pack(side='left', padx=10)
 
@@ -218,16 +221,34 @@ class taxwindow(tk.Tk):
    
    #clear input fields and output
    def resetinput(tax_estimator):
-      confirm = messagebox.askyesno("Clear All", "Are you sure you want to clear all input fields and output?")
-      if confirm:
-       for entry in[tax_estimator.income, tax_estimator.epf, tax_estimator.insurance, tax_estimator.edufee, tax_estimator.donate, tax_estimator.pcb]:
-         entry.delete(0,'end')
+       # Check if there's anything to clear first
+       has_input = False
+       for entry in [tax_estimator.income, tax_estimator.epf, tax_estimator.insurance,
+                     tax_estimator.edufee, tax_estimator.donate, tax_estimator.pcb]:
+           if entry.get().strip() != "":
+               has_input = True
+               break
 
-       if entry.get().strip() == "":
-            messagebox.showinfo("No Input", "No input to clear.")
-            return
+       # Check if output has content
+       if tax_estimator.taxoutput.get("1.0", "end-1c").strip() != "":
+           has_input = True
 
-      tax_estimator.taxoutput.delete("1.0","end")
+       # If nothing to clear, show message and return
+       if not has_input:
+           messagebox.showinfo("No Input", "No input to clear.")
+           return
+
+       # Ask for confirmation
+       confirm = messagebox.askyesno("Clear All", "Are you sure you want to clear all input fields and output?")
+
+       if confirm:
+           # Clear all input fields
+           for entry in [tax_estimator.income, tax_estimator.epf, tax_estimator.insurance,
+                         tax_estimator.edufee, tax_estimator.donate, tax_estimator.pcb]:
+               entry.delete(0, 'end')
+
+           # Clear output field
+           tax_estimator.taxoutput.delete("1.0", "end")
 
 #run program function
 def runprogram(username):

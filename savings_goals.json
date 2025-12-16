@@ -1,16 +1,16 @@
 {
-    "7c47c61c-e37b-4c6d-ab4f-8ff16a0dd1cb": {
-        "id": "7c47c61c-e37b-4c6d-ab4f-8ff16a0dd1cb",
-        "name": "haha",
-        "target": 123.0,
-        "saved": 12.0,
-        "target_date": "11-12-2025",
+    "e6162c98-6731-475b-b3e0-1c53a67a233b": {
+        "id": "e6162c98-6731-475b-b3e0-1c53a67a233b",
+        "name": "bla",
+        "target": 44.0,
+        "saved": 33.0,
+        "target_date": "12-12-2026",
         "contributions": [
             {
-                "amount": 12.0,
-                "timestamp": "2025-12-11T16:30:51.677343"
+                "amount": 33.0,
+                "timestamp": "2025-12-16T13:16:59.437304"
             }
         ],
-        "date_created": "2025-12-11T16:30:38.538617"
+        "date_created": "2025-12-16T13:16:44.120429"
     }
 }
