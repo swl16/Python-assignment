@@ -3,12 +3,20 @@
         "id": "e6162c98-6731-475b-b3e0-1c53a67a233b",
         "name": "bla",
         "target": 44.0,
-        "saved": 33.0,
+        "saved": 45.0,
         "target_date": "12-12-2026",
         "contributions": [
             {
                 "amount": 33.0,
                 "timestamp": "2025-12-16T13:16:59.437304"
+            },
+            {
+                "amount": 11.0,
+                "timestamp": "2025-12-16T16:38:46.670843"
+            },
+            {
+                "amount": 1.0,
+                "timestamp": "2025-12-16T16:39:18.559717"
             }
         ],
         "date_created": "2025-12-16T13:16:44.120429"

@@ -2,3 +2,4 @@ daryl,1234
 wei,1234
 tang,123
 qwe,123
+darwin,1234
