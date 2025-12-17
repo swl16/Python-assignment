@@ -335,8 +335,8 @@ class ExpensesTracker:
         date_label.pack(side='left')
 
         ET.date_picker = DateEntry(date_frame, width=30, font=('Arial', 11), borderwidth=2, date_pattern='dd/mm/yyyy',
-                                background='#7e9aed', foreground='white')
-        ET.date_picker.delete(0, 'end')
+                                background='#7e9aed', foreground='white') #didn't use readonly
+        ET.date_picker.delete(0, 'end')  #if let the date entry become readonly, the date cannot show the previous selected date in this record because it cannot be edited (delete and insert)
         ET.date_picker.insert(0,ET.data[ET.index][0]) #insert previous data
         ET.date_picker.pack(side='left')
 
@@ -406,6 +406,12 @@ class ExpensesTracker:
         amount_input = ET.amount_enter.get().strip()
         category_input = ET.category_combobox.get()
         remark_input = ET.remark_entry.get("1.0", "end-1c").strip()
+
+        try:
+            datetime.strptime(date_input, "%d/%m/%Y")  #user still can edit the date entry box, so to prevent the user enter invalid date
+        except ValueError:
+            messagebox.showerror("Error", "Please choose a valid date.")
+            return
 
         if not amount_input:
             messagebox.showerror("Error", "Please enter a valid amount.")
