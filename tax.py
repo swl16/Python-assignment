@@ -52,7 +52,7 @@ class taxwindow(tk.Tk):
 
     #window settings
     tax_estimator.title("SIMPLE TAX ESTIMATOR")
-    tax_estimator.geometry("750x800")
+    tax_estimator.geometry("750x700")
     tax_estimator.protocol("WM_DELETE_WINDOW", tax_estimator.destroypage)
     tax_estimator.config(background='#f7f2e9')
 
@@ -75,9 +75,13 @@ class taxwindow(tk.Tk):
     tk.Label(frame1, text="Individual Relief (RM) : 9000", font=('Arial',13,'bold'),bg='#f7f2e9').pack(side='left')
  
     #output text
-    tax_estimator.taxoutput = tk.Text(tax_estimator, width=60, height=12,font=("Arial",12))
+    tax_estimator.taxoutput = tk.Text(tax_estimator, width=60, height=8,font=("Arial",12))
     tax_estimator.taxoutput.config(state="disabled")
     tax_estimator.taxoutput.pack(pady=15)
+
+    tax_estimator.taxoutput1 = tk.Text(tax_estimator, width=60, height=4,font=("Arial",12))
+    tax_estimator.taxoutput1.config(state="disabled")
+    tax_estimator.taxoutput1.pack(pady=15)
     
     #bottom menu frame
     bottom_menu = tk.Frame(tax_estimator, bg='#7e9aed', height=50)
@@ -167,12 +171,21 @@ class taxwindow(tk.Tk):
               f"Estimated Income Tax Payable : RM {taxpayable:.2f}\n"
               f"Total PCB (12 Months) : RM {totalpcb:.2f}\n")
     tax_estimator.taxoutput.insert("end", result)
-    if taxpayable > totalpcb:
-      tax_estimator.taxoutput.insert("end", "❗Tax payable > PCB. There is insufficient tax payment.")
-    else:
-      tax_estimator.taxoutput.insert("end", "✔ Tax payable < PCB. There is excess deduction. You get refund.")
 
+    tax_estimator.taxoutput1.config(state="normal")
+    tax_estimator.taxoutput1.delete("1.0", "end")
+    #determine tax payment or refund
+    if taxpayable > totalpcb:
+      taxpayment = taxpayable - totalpcb
+      tax_estimator.taxoutput1.insert("end", "❗Tax payable > PCB. There is insufficient tax payment.\n")
+      tax_estimator.taxoutput1.insert("end", f"You need to pay an additional RM {taxpayment:.2f}\n")
+    else:
+      taxpayment = totalpcb - taxpayable
+      tax_estimator.taxoutput1.insert("end", "✔ Tax payable < PCB. There is excess deduction. You get refund.\n")
+      tax_estimator.taxoutput1.insert("end", f"You will get a refund of RM {taxpayment:.2f}\n")
+      
     tax_estimator.taxoutput.config(state="disabled") #user cannot edit the result
+    tax_estimator.taxoutput1.config(state="disabled")
     
     #save result to history file
     tax_estimator.savecalhistory(result)
@@ -237,7 +250,8 @@ class taxwindow(tk.Tk):
 
        # Check if output has content
        if tax_estimator.taxoutput.get("1.0", "end-1c").strip() != "":
-           has_input = True
+           if tax_estimator.taxoutput1.get("1.0", "end-1c").strip() != "":
+            has_input = True
 
        # If nothing to clear, show message and return
        if not has_input:
@@ -253,10 +267,13 @@ class taxwindow(tk.Tk):
                          tax_estimator.edufee, tax_estimator.donate, tax_estimator.pcb]:
                entry.delete(0, 'end')
            tax_estimator.taxoutput.config(state="normal")
+           tax_estimator.taxoutput1.config(state="normal")
            # Clear output field
            tax_estimator.taxoutput.delete("1.0", "end")
+           tax_estimator.taxoutput1.delete("1.0", "end")
 
            tax_estimator.taxoutput.config(state="disabled")
+           tax_estimator.taxoutput1.config(state="disabled")
 
 
 #run program function
