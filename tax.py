@@ -141,6 +141,12 @@ class taxwindow(tk.Tk):
       elif education > 7000:
          messagebox.showerror("Error!", "The Maximum amount for education fee is RM7000. Please try again")
          return
+      elif insurance and education > 7000:
+         messagebox.showerror("Error!", "The Maximum amount for insurance and education fee is RM7000 each. Please try again")
+         return
+      elif income < 0 or epf < 0 or insurance < 0 or education < 0 or donation < 0 or pcb < 0:
+         messagebox.showerror("Error!","Negative values are not allowed. Please enter valid positive numbers.")
+         return
       
     individual = 9000.00
     taxrelief = individual + epf + insurance + education
@@ -225,6 +231,7 @@ class taxwindow(tk.Tk):
 
      def deletehistory():
       confirm = messagebox.askyesno("Delete Calculation History","Confirm delete all calculation history?")
+      history_window.withdraw()
      
       with open(tax_estimator.cal_history, "r") as f:
          content = f.read()
