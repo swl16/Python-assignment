@@ -1,0 +1,9 @@
+Annual Income: RM 90000.00
+Total Tax Relief (included Individual) : RM 17000.00
+Chargeable Income : RM 72800.00
+Estimated Income Tax : RM 4232.00
+Eligible Rebate : RM 0.00
+Estimated Income Tax Payable : RM 4232.00
+Total PCB (12 Months) : RM 2160.00
+
+--------------------------------------------------
