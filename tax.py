@@ -135,14 +135,14 @@ class taxwindow(tk.Tk):
      return
     else:
       #validate maximum relief amounts
-      if insurance > 7000:
+      if insurance > 7000 and education > 7000:
+         messagebox.showerror("Error!", "The Maximum amount for insurance and education fee is RM7000 each. Please try again")
+         return
+      elif insurance > 7000:
          messagebox.showerror("Error!", "The Maximum amount for insurance is RM7000. Please try again")
          return
       elif education > 7000:
          messagebox.showerror("Error!", "The Maximum amount for education fee is RM7000. Please try again")
-         return
-      elif insurance > 7000 and education > 7000:
-         messagebox.showerror("Error!", "The Maximum amount for insurance and education fee is RM7000 each. Please try again")
          return
       elif income < 0 or epf < 0 or insurance < 0 or education < 0 or donation < 0 or pcb < 0:
          messagebox.showerror("Error!","Negative values are not allowed. Please enter valid positive numbers.")
