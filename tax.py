@@ -141,7 +141,7 @@ class taxwindow(tk.Tk):
       elif education > 7000:
          messagebox.showerror("Error!", "The Maximum amount for education fee is RM7000. Please try again")
          return
-      elif insurance and education > 7000:
+      elif insurance > 7000 and education > 7000:
          messagebox.showerror("Error!", "The Maximum amount for insurance and education fee is RM7000 each. Please try again")
          return
       elif income < 0 or epf < 0 or insurance < 0 or education < 0 or donation < 0 or pcb < 0:
