@@ -488,7 +488,7 @@ class ExpensesTracker:
             Edit_button = Button(Outer_frame,text='📝',bg='#7e9aed', fg='white',width=2,height=1,command=lambda idx=index:ET.Edit_expense(idx))
             Edit_button.pack(side="right",padx=(0,10))
 
-            Delete_button = Button(Outer_frame,text='🗑',bg='#7e9aed', fg='white',width=2,height=1,command=lambda idx=index:ET.delete_expense(idx))
+            Delete_button = Button(Outer_frame,text="⌫",bg='#7e9aed', fg='white',height=1,width=2,command=lambda idx=index:ET.delete_expense(idx))
             Delete_button.pack(side="right",padx=(0,8))
 
     def Get_month_data(ET):
@@ -512,24 +512,25 @@ class ExpensesTracker:
 
     def show_pie_chart(ET,Month):
         #show the statistic using pie chart
-        selected_month = Month
+        #selected_month = Month
 
-        pie_data, _ = ET.Get_month_data()
+        pie_data, _ = ET.Get_month_data()  #only the data is used in this function
         category_amount = {}
 
+        #clear all previous widget
         for widget in ET.pie_frame.winfo_children():
             widget.destroy()
 
         plt.close('all')
 
         for row in pie_data:
-            if row[0] == Month:
+            if Month == "All" or row[0] == Month: #If all month is selected, get every row data if no check it is selected month or not
                 category = row[2]
                 amount = float(row[1])
                 category_amount[category] = category_amount.get(category, 0) + amount
 
         if not category_amount:
-            No_data_label = Label(ET.pie_frame, text="There is no record for this month.", font=('Arial', 15, 'bold'),
+            No_data_label = Label(ET.pie_frame, text="There is no record.", font=('Arial', 15, 'bold'),
                                   fg='#7e9aed', bg='#fcf7ed')
             No_data_label.place(anchor='center', relx=0.5, rely=0.5)
             return
@@ -540,7 +541,12 @@ class ExpensesTracker:
         fig, ax = plt.subplots(figsize=(4, 4), dpi=100)
         ax.pie(piechart_sizes, labels=piechart_label, autopct="%1.1f%%", textprops={'fontsize': 8})
         ax.axis('equal')
-        ax.set_title(f"Expenses for {Month}")
+
+        match Month:
+            case "All":
+                ax.set_title("Expenses for All Months")
+            case _:
+                ax.set_title(f"Expenses for {Month}")
 
         chart = FigureCanvasTkAgg(fig, master=ET.pie_frame)
         chart.draw()
@@ -565,20 +571,22 @@ class ExpensesTracker:
         MonthCombo_combobox.bind("<<ComboboxSelected>>", lambda event: ET.show_pie_chart(MonthCombo_combobox.get()))
 
         pie_data, month = ET.Get_month_data()
-        MonthCombo_combobox['values'] = month
 
         if month:
-            if ET.select_month and ET.select_month in month:
-                MonthCombo_combobox.set(ET.select_month)
-                ET.show_pie_chart(ET.select_month)
-            else:
-                MonthCombo_combobox.set(month[0])
-                ET.select_month = month[0]
-                ET.show_pie_chart(ET.select_month)
-
+            values_combobox = ["All"] + month
         else:
-            MonthCombo_combobox.set('')
-            select_month = None
+            values_combobox = ["All"]
+
+        MonthCombo_combobox['values'] = values_combobox
+
+        if ET.select_month and ET.select_month in values_combobox:
+            MonthCombo_combobox.set(ET.select_month)
+            ET.show_pie_chart(ET.select_month)
+        else:
+            MonthCombo_combobox.set("All")
+            ET.select_month = "All"
+            ET.show_pie_chart(ET.select_month)
+
 
     #window.mainloop()
 
