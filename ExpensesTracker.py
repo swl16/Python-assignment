@@ -68,10 +68,10 @@ class ExpensesTracker:
         main_frame = Frame(ET.Mainpage, bg='#f7f2e9')
         main_frame.pack(fill='both', expand=True, padx=20, pady=(0, 10))
 
-        #Scoll bar to see all the expenses
+        #Scroll bar to see all the expenses
         main_canvas = Canvas(main_frame, bg='#f7f2e9', highlightthickness=0)
         scrollbar = Scrollbar(main_frame, orient="vertical", command=main_canvas.yview)
-        ET.scrollPage = Frame(main_canvas, bg='#f7f2e9')
+        ET.scrollPage = Frame(main_canvas, bg='#f7f2e9')  #main frame to put widget
 
         ET.scrollPage.bind("<Configure>", lambda e: main_canvas.configure(scrollregion=main_canvas.bbox("all")))
 
@@ -261,6 +261,9 @@ class ExpensesTracker:
         return False
 
     def Show_total_expenses(ET):
+        for widget in ET.total_frame.winfo_children():
+            widget.destroy()
+
         total = 0
         data = ET.read_expenses()
 
@@ -449,7 +452,7 @@ class ExpensesTracker:
         for widget in ET.scrollPage.winfo_children():
             widget.destroy()
 
-        if ET.Empty_label:
+        if ET.Empty_label:  #double check that if there has an empty label
             ET.Empty_label.pack_forget()
 
         if ET.Check_empty_file():
