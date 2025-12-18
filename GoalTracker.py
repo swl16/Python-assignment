@@ -41,30 +41,6 @@ def save_goals(goals):
         # Chapter 4B: Exception Handling (Handling file write errors)
         messagebox.showerror("File Error", f"Error: Could not save data to file. {e}")
 
-def get_countdown_string(target_date_str):
-    """
-    Chapter 2C: Strings & Formatting
-    Calculates the live time remaining until the target date.
-    """
-    try:
-        target_date = datetime.datetime.strptime(target_date_str, DATE_FORMAT)
-        now = datetime.datetime.now()
-        diff = target_date - now
-
-        if diff.total_seconds() <= 0:
-            return "Time's Up!"
-        
-        days = diff.days
-        hours, remainder = divmod(diff.seconds, 3600)
-        minutes, _ = divmod(remainder, 60)
-        
-        if days > 0:
-            return f"{days}d {hours}h {minutes}m"
-        else:
-            return f"{hours}h {minutes}m"
-    except:
-        return "N/A"
-
 def calculate_pacing_and_status(goal):
     target_date_str = goal.get('target_date')
     saved = goal.get('saved', 0.0)
@@ -124,16 +100,14 @@ def calculate_pacing_and_status(goal):
 # --- World Clock Class ---
 
 class WorldClock(ttk.Frame):
-    def __init__(self, master, style_name, refresh_callback=None, *args, **kwargs):
+    def __init__(self, master, style_name, *args, **kwargs):
         super().__init__(master, style=style_name, *args, **kwargs)
-        self.refresh_callback = refresh_callback
         
         self.time_label = ttk.Label(self, 
                                     font=('Arial', 12, 'bold'), 
-                                    foreground='#004d40', 
-                                    background='#b3e5fc', 
-                                    padding=5,
-                                    justify='center')
+                                    foreground='#004d40', # Dark teal
+                                    background='#b3e5fc', # Secondary blue
+                                    padding=5)
         self.time_label.pack(fill='x', padx=10, pady=5)
 
         self.timer_id = None
@@ -143,18 +117,18 @@ class WorldClock(ttk.Frame):
         if not self.winfo_exists():
             return
 
+        # Get current time and convert it to Malaysia Time (GMT+8)
         now_utc = datetime.datetime.now(datetime.timezone.utc)
         malaysia_time = now_utc.astimezone(MALAYSIA_TIMEZONE_OFFSET)
         
+        # Format the time display
         time_str = malaysia_time.strftime('%I:%M:%S %p %Z')
         date_str = malaysia_time.strftime('%A, %d %b %Y')
         
         display_text = f"Malaysia Time (GMT+8)\n{date_str}\n{time_str}"
         self.time_label.config(text=display_text)
         
-        if self.refresh_callback:
-            self.refresh_callback()
-            
+        # Schedule the update every 1000 milliseconds (1 second)
         self.timer_id = self.after(1000, self.update_time)
 
     def stop(self):
@@ -174,6 +148,7 @@ class GoalTrackerApp:
 
         self.master = tk.Tk()
         self.master.protocol("WM_DELETE_WINDOW", self.back_menu)
+
         self.master.title(f"Savings Goal Tracker ({CURRENCY_SYMBOL})")
         
         # Chapter 5B: Dictionaries (The primary data structure for goals)
@@ -183,14 +158,19 @@ class GoalTrackerApp:
         style = ttk.Style()
         style.theme_use('clam')
         
+        # Define light blue colors
         PRIMARY_BLUE = '#f7f2e9'
-        SECONDARY_BLUE = '#b3e5fc' 
-        ACCENT_BLUE = '#7e9aed'   
+        SECONDARY_BLUE = '#b3e5fc' # Slightly darker blue for frames/buttons
+        ACCENT_BLUE = '#7e9aed'   # A nice accent blue
         
+        # Configure the main frame background
         style.configure('TFrame', background=PRIMARY_BLUE)
         style.configure('TLabel', background=PRIMARY_BLUE, font=('Arial', 10))
+        
+        # Configure a special style for the clock frame/label
         style.configure('Clock.TFrame', background=SECONDARY_BLUE, relief='raised', borderwidth=1)
 
+        # Configure buttons with a subtle blue gradient/flat look
         style.configure('TButton', 
                         background=ACCENT_BLUE, 
                         foreground='white', 
@@ -200,6 +180,7 @@ class GoalTrackerApp:
         style.map('TButton', 
                  background=[('active', '#03a9f4'), ('pressed', '#0288d1')])
         
+        # Configure Treeview style
         style.configure('Treeview', 
                         background='white', 
                         foreground='#333333',
@@ -212,6 +193,7 @@ class GoalTrackerApp:
         style.map('Treeview.Heading', 
                   background=[('active', ACCENT_BLUE)])
 
+
         # --- Main Frame ---
         self.main_frame = ttk.Frame(self.master, padding="15 15 15 15", relief='raised', borderwidth=2)
         self.main_frame.pack(fill='both', expand=True)
@@ -222,95 +204,91 @@ class GoalTrackerApp:
         back_button = ttk.Button(self.back_frame,text = "< Back",command=self.back_menu)
         back_button.pack(side="left")
 
-        # --- Treeview for Goals List (MOVED UP to prevent AttributeError) ---
-        cols = ("ID", "Name", "Target", "Saved", "Progress", "Status", "Time Left", "Monthly Req.")
-        self.tree = ttk.Treeview(self.main_frame, columns=cols, show="headings")
+        # --- Top Control Panel (Title and Clock) ---
+        self.top_panel = ttk.Frame(self.main_frame, style='TFrame')
+        self.top_panel.pack(fill='x', pady=(0, 20))
         
+        # Title (Left Side)
+        title_label = ttk.Label(self.top_panel, text="Financial Goals Dashboard", 
+                                font=('Arial', 16, 'bold'), 
+                                background=PRIMARY_BLUE, 
+                                foreground='#004d40') # Dark teal for contrast
+        title_label.pack(side=tk.LEFT, padx=10, pady=5)
+        
+        # Malaysia Clock (Right Side)
+        self.clock = WorldClock(self.top_panel, style_name='Clock.TFrame')
+        self.clock.pack(side=tk.RIGHT)
+
+
+        # --- Treeview for Goals List ---
+        
+        self.tree = ttk.Treeview(self.main_frame, columns=("ID", "Name", "Target", "Saved", "Progress", "Status", "Monthly Req."), show="headings")
+        
+        # Define column headings and widths
         self.tree.heading("ID", text="ID")
         self.tree.heading("Name", text="Goal Name")
+        # Updated Currency Header
         self.tree.heading("Target", text=f"Target ({CURRENCY_SYMBOL})")
         self.tree.heading("Saved", text=f"Saved ({CURRENCY_SYMBOL})")
         self.tree.heading("Progress", text="Progress (%)")
         self.tree.heading("Status", text="Status")
-        self.tree.heading("Time Left", text="Time Left")
+        # Updated Currency Header
         self.tree.heading("Monthly Req.", text=f"Required Monthly ({CURRENCY_SYMBOL})")
 
         self.tree.column("ID", width=70, anchor=tk.CENTER)
-        self.tree.column("Name", width=140, anchor=tk.W)
-        self.tree.column("Target", width=90, anchor=tk.E)
-        self.tree.column("Saved", width=90, anchor=tk.E)
+        self.tree.column("Name", width=150, anchor=tk.W)
+        self.tree.column("Target", width=100, anchor=tk.E)
+        self.tree.column("Saved", width=100, anchor=tk.E)
         self.tree.column("Progress", width=80, anchor=tk.CENTER)
-        self.tree.column("Status", width=110, anchor=tk.CENTER)
-        self.tree.column("Time Left", width=110, anchor=tk.CENTER)
-        self.tree.column("Monthly Req.", width=110, anchor=tk.E)
+        self.tree.column("Status", width=120, anchor=tk.CENTER)
+        self.tree.column("Monthly Req.", width=120, anchor=tk.E)
         
         self.tree.pack(fill='both', expand=True)
 
-        # --- Top Control Panel (Title and Clock) ---
-        self.top_panel = ttk.Frame(self.main_frame, style='TFrame')
-        self.top_panel.pack(fill='x', pady=(0, 20), before=self.tree) # Place before tree visually
-        
-        title_label = ttk.Label(self.top_panel, text=f"Welcome, {self.username}!", 
-                                font=('Arial', 16, 'bold'), 
-                                background=PRIMARY_BLUE, 
-                                foreground='#004d40') 
-        title_label.pack(side=tk.LEFT, padx=10, pady=5)
-        
-        # Now we create the clock AFTER self.tree is defined
-        self.clock = WorldClock(self.top_panel, style_name='Clock.TFrame', refresh_callback=self.refresh_countdown_only)
-        self.clock.pack(side=tk.RIGHT)
-
         # --- Buttons Frame ---
-        self.button_frame = ttk.Frame(self.main_frame, padding="10 0 0 0", style='TFrame')
+        self.button_frame = ttk.Frame(self.main_frame, padding="10 0 0 0", style='TFrame') 
         self.button_frame.pack(fill='x', pady=(10, 0))
 
+        # Command buttons bind to methods for user interaction.
         ttk.Button(self.button_frame, text="Add New Goal", command=self.add_goal_dialog).pack(side=tk.LEFT, padx=5)
+        # NEW FEATURE: Edit/Rename Goal button
+        ttk.Button(self.button_frame, text="Edit Selected Goal", command=self.edit_goal_dialog).pack(side=tk.LEFT, padx=5)
         ttk.Button(self.button_frame, text="Record Contribution", command=self.add_contribution_dialog).pack(side=tk.LEFT, padx=5)
         ttk.Button(self.button_frame, text="Delete Selected Goal", command=self.delete_goal).pack(side=tk.LEFT, padx=5)
-        ttk.Button(self.button_frame, text="Refresh All", command=self.refresh_goal_list).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(self.button_frame, text="Refresh", command=self.refresh_goal_list).pack(side=tk.RIGHT, padx=5)
 
+        # Initial data load and display.
         self.refresh_goal_list()
 
     def back_menu(self):
         if hasattr(self, 'clock'):
             self.clock.stop()
+
         self.mainmenu.deiconify()
         self.master.destroy()
-
-    def refresh_countdown_only(self):
-        """Updates just the 'Time Left' column values."""
-        # Safety check: ensure tree exists before trying to access it
-        if not hasattr(self, 'tree') or not self.tree.winfo_exists():
-            return
-
-        for goal_id in self.tree.get_children():
-            if goal_id in self.goals:
-                goal = self.goals[goal_id]
-                new_countdown = get_countdown_string(goal.get('target_date', ''))
-                current_values = list(self.tree.item(goal_id, 'values'))
-                if len(current_values) > 6:
-                    current_values[6] = new_countdown 
-                    self.tree.item(goal_id, values=current_values)
 
     def refresh_goal_list(self):
         # Chapter 5A: Lists (Traversing of Lists and clearing Treeview)
         for item in self.tree.get_children():
             self.tree.delete(item)
 
+        # Sort goals by creation date (newest first).
         sorted_goals = sorted(self.goals.items(), key=lambda item: item[1].get('date_created', '0'), reverse=True)
 
         # Chapter 3B: Loop Control Structure (Iterating through goals)
         for goal_id, goal in sorted_goals:
+            # Calculate pacing and status for display.
             required_monthly, months_remaining, current_status = calculate_pacing_and_status(goal)
             
             target = goal.get('target', 0.0)
             saved = goal.get('saved', 0.0)
             name = goal.get('name', 'Untitled')
+            
             percentage = (saved / target * 100) if target > 0 else 0
             
             monthly_req_display = f"{required_monthly:,.2f}" if current_status not in ["Complete", "Needs Date", "Date Error", "Overdue"] else "N/A"
-            countdown = get_countdown_string(goal.get('target_date', ''))
             
+            # Insert data into the treeview.
             self.tree.insert("", tk.END, iid=goal_id, values=(
                 goal_id[:8], 
                 name, 
@@ -318,26 +296,72 @@ class GoalTrackerApp:
                 f"{saved:,.2f}", 
                 f"{percentage:,.1f}", 
                 current_status, 
-                countdown,
                 monthly_req_display
             ), tags=(current_status.replace(" ", "_"),))
             
-        self.tree.tag_configure('Falling_Behind', background='#ffcdd2')
+        # Optional: Configure colors based on status (softened colors for light blue theme)
+        self.tree.tag_configure('Falling_Behind', background='#ffcdd2') # Light red/pink
         self.tree.tag_configure('Overdue', background='#ffcdd2')
-        self.tree.tag_configure('Complete', background='#c8e6c9') 
-        self.tree.tag_configure('On_Track', background='#bbdefb')
+        self.tree.tag_configure('Complete', background='#c8e6c9') # Light green
+        self.tree.tag_configure('On_Track', background='#bbdefb') # Light blue/accent
 
     def add_goal_dialog(self):
+        # TopLevel window for input forms.
         dialog = tk.Toplevel(self.master)
         dialog.title("Add New Goal")
         dialog.geometry("300x250")
         dialog.transient(self.master)
         dialog.grab_set()
         
+        # Use a dictionary to hold input variables.
         vars = {
             "name": tk.StringVar(),
             "target": tk.StringVar(),
             "date": tk.StringVar(value=datetime.date.today().strftime(DATE_FORMAT))
+        }
+
+        # Form layout
+        form_frame = ttk.Frame(dialog, padding=10)
+        form_frame.pack(fill='both', expand=True)
+        
+        # Labels and Entries
+        ttk.Label(form_frame, text="Goal Name:").grid(row=0, column=0, padx=5, pady=5, sticky='w')
+        ttk.Entry(form_frame, textvariable=vars["name"]).grid(row=0, column=1, padx=5, pady=5, sticky='ew')
+
+        # Updated Label with CURRENCY_SYMBOL
+        ttk.Label(form_frame, text=f"Target Amount ({CURRENCY_SYMBOL}):").grid(row=1, column=0, padx=5, pady=5, sticky='w')
+        ttk.Entry(form_frame, textvariable=vars["target"]).grid(row=1, column=1, padx=5, pady=5, sticky='ew')
+
+        ttk.Label(form_frame, text=f"Target Date ({DATE_FORMAT}):").grid(row=2, column=0, padx=5, pady=5, sticky='w')
+        ttk.Entry(form_frame, textvariable=vars["date"]).grid(row=2, column=1, padx=5, pady=5, sticky='ew')
+
+        # Add button to submit the form.
+        ttk.Button(form_frame, text="Create Goal", 
+                   command=lambda: self._submit_new_goal(dialog, vars)).grid(row=3, column=0, columnspan=2, pady=10)
+                   
+        form_frame.grid_columnconfigure(1, weight=1)
+
+    # NEW FEATURE: Dialog for editing an existing goal
+    def edit_goal_dialog(self):
+        # Chapter 3A: Selection Control Structure (Checking for a selected item)
+        selected_item_id = self.tree.focus()
+        if not selected_item_id:
+            messagebox.showwarning("Selection Error", "Please select a goal to edit.")
+            return
+
+        goal = self.goals.get(selected_item_id)
+        
+        dialog = tk.Toplevel(self.master)
+        dialog.title("Edit/Rename Goal")
+        dialog.geometry("300x250")
+        dialog.transient(self.master)
+        dialog.grab_set()
+        
+        # Chapter 5B: Dictionaries (Populating form with current values)
+        vars = {
+            "name": tk.StringVar(value=goal['name']),
+            "target": tk.StringVar(value=str(goal['target'])),
+            "date": tk.StringVar(value=goal['target_date'])
         }
 
         form_frame = ttk.Frame(dialog, padding=10)
@@ -345,21 +369,25 @@ class GoalTrackerApp:
         
         ttk.Label(form_frame, text="Goal Name:").grid(row=0, column=0, padx=5, pady=5, sticky='w')
         ttk.Entry(form_frame, textvariable=vars["name"]).grid(row=0, column=1, padx=5, pady=5, sticky='ew')
+
         ttk.Label(form_frame, text=f"Target Amount ({CURRENCY_SYMBOL}):").grid(row=1, column=0, padx=5, pady=5, sticky='w')
         ttk.Entry(form_frame, textvariable=vars["target"]).grid(row=1, column=1, padx=5, pady=5, sticky='ew')
+
         ttk.Label(form_frame, text=f"Target Date ({DATE_FORMAT}):").grid(row=2, column=0, padx=5, pady=5, sticky='w')
         ttk.Entry(form_frame, textvariable=vars["date"]).grid(row=2, column=1, padx=5, pady=5, sticky='ew')
 
-        ttk.Button(form_frame, text="Create Goal", 
-                   command=lambda: self._submit_new_goal(dialog, vars)).grid(row=3, column=0, columnspan=2, pady=10)
+        ttk.Button(form_frame, text="Save Changes", 
+                   command=lambda: self._submit_edit_goal(dialog, vars, selected_item_id)).grid(row=3, column=0, columnspan=2, pady=10)
                    
         form_frame.grid_columnconfigure(1, weight=1)
 
-    def _submit_new_goal(self, dialog, vars):
+    # NEW FEATURE: Logic for updating the goal data
+    def _submit_edit_goal(self, dialog, vars, goal_id):
         name = vars["name"].get().strip()
         target_str = vars["target"].get().strip()
         date_str = vars["date"].get().strip()
 
+        # Chapter 4B: Exception Handling (Validation)
         if not name:
             messagebox.showerror("Validation Error", "Goal Name is required.")
             return
@@ -376,38 +404,90 @@ class GoalTrackerApp:
             messagebox.showerror("Validation Error", f"Date must be in {DATE_FORMAT} format.")
             return
 
+        # Chapter 5B: Dictionaries (Updating specific fields while keeping ID and History)
+        self.goals[goal_id]['name'] = name
+        self.goals[goal_id]['target'] = target_amount
+        self.goals[goal_id]['target_date'] = date_str
+        
+        save_goals(self.goals)
+        self.refresh_goal_list()
+        messagebox.showinfo("Success", "Goal successfully updated.")
+        dialog.destroy()
+
+    def _submit_new_goal(self, dialog, vars):
+        name = vars["name"].get().strip()
+        target_str = vars["target"].get().strip()
+        date_str = vars["date"].get().strip()
+
+        # Chapter 4B: Exception Handling (Data validation using try/except)
+        if not name:
+            messagebox.showerror("Validation Error", "Goal Name is required.")
+            return
+        try:
+            target_amount = float(target_str)
+            if target_amount <= 0:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Validation Error", "Target Amount must be a positive number.")
+            return
+
+        try:
+            datetime.datetime.strptime(date_str, DATE_FORMAT)
+        except ValueError:
+            messagebox.showerror("Validation Error", f"Date must be in {DATE_FORMAT} format.")
+            return
+
+        # Chapter 5B: Dictionaries (Creating a new dictionary entry)
         new_id = str(uuid.uuid4())
         self.goals[new_id] = {
-            'id': new_id, 'name': name, 'target': target_amount, 'saved': 0.0,
-            'target_date': date_str, 'contributions': [], 'date_created': datetime.datetime.now().isoformat()
+            'id': new_id,
+            'name': name,
+            'target': target_amount,
+            'saved': 0.0,
+            'target_date': date_str,
+            # Chapter 5A: Lists (Storing contributions history)
+            'contributions': [],
+            'date_created': datetime.datetime.now().isoformat()
         }
         
         save_goals(self.goals)
         self.refresh_goal_list()
-        messagebox.showinfo("Success", f"Goal '{name}' added.")
+        messagebox.showinfo("Success", f"Goal '{name}' successfully added.")
         dialog.destroy()
 
     def add_contribution_dialog(self):
+        # Chapter 3A: Selection Control Structure (Checking for a selected item)
         selected_item_id = self.tree.focus()
         if not selected_item_id:
-            messagebox.showwarning("Selection Error", "Please select a goal first.")
+            messagebox.showwarning("Selection Error", "Please select a goal from the list first.")
             return
 
         goal = self.goals.get(selected_item_id)
-        amount_str = simpledialog.askstring("Record Contribution", 
-                                            f"Enter contribution for '{goal['name']}' ({CURRENCY_SYMBOL}):",
-                                            parent=self.master)
-        
-        if amount_str is None: return
-            
-        try:
-            contribution_amount = float(amount_str.strip())
-            if contribution_amount <= 0: raise ValueError
-        except ValueError:
-            messagebox.showerror("Validation Error", "Positive number required.")
+        if not goal:
+            messagebox.showerror("Data Error", "Selected goal data not found.")
             return
 
-        self.goals[selected_item_id]['saved'] += contribution_amount
+        # Updated Dialog Text with CURRENCY_SYMBOL
+        amount_str = simpledialog.askstring("Record Contribution", 
+                                            f"Enter contribution amount for '{goal['name']}' (Current: {CURRENCY_SYMBOL}{goal['saved']:.2f}):",
+                                            parent=self.master)
+        
+        if amount_str is None: # User pressed Cancel
+            return
+            
+        try:
+            # Chapter 4B: Exception Handling (Input validation)
+            contribution_amount = float(amount_str.strip())
+            if contribution_amount <= 0:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Validation Error", "Contribution must be a positive number.")
+            return
+
+        # Update goal data
+        new_saved = goal['saved'] + contribution_amount
+        self.goals[selected_item_id]['saved'] = new_saved
+        # Chapter 5A: List Methods (Appending to the contributions list)
         self.goals[selected_item_id]['contributions'].append({
             'amount': contribution_amount,
             'timestamp': datetime.datetime.now().isoformat()
@@ -415,18 +495,24 @@ class GoalTrackerApp:
         
         save_goals(self.goals)
         self.refresh_goal_list()
+        # Updated Success Message with CURRENCY_SYMBOL
+        messagebox.showinfo("Success", f"Recorded {CURRENCY_SYMBOL}{contribution_amount:,.2f}. New saved total: {CURRENCY_SYMBOL}{new_saved:,.2f}")
 
     def delete_goal(self):
         selected_item_id = self.tree.focus()
-        if not selected_item_id: return
+        if not selected_item_id:
+            messagebox.showwarning("Selection Error", "Please select a goal to delete.")
+            return
             
         goal = self.goals.get(selected_item_id)
-        if messagebox.askyesno("Confirm", f"Delete '{goal['name']}'?"):
+        if not goal:
+            messagebox.showerror("Data Error", "Selected goal data not found.")
+            return
+
+        # Chapter 3A: Selection Control Structure (Confirmation before deletion)
+        if messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete goal: '{goal['name']}'?"):
+            # Chapter 5B: Dictionaries (Deleting an item)
             del self.goals[selected_item_id]
             save_goals(self.goals)
             self.refresh_goal_list()
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = GoalTrackerApp("User", root)
-    root.mainloop()
+            messagebox.showinfo("Success", f"Goal '{goal['name']}' successfully deleted.")
