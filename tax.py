@@ -231,7 +231,6 @@ class taxwindow(tk.Tk):
 
      def deletehistory():
       confirm = messagebox.askyesno("Delete Calculation History","Confirm delete all calculation history?")
-      history_window.withdraw()
      
       with open(tax_estimator.cal_history, "r") as f:
          content = f.read()
@@ -241,6 +240,7 @@ class taxwindow(tk.Tk):
          elif confirm:
              with open(tax_estimator.cal_history,"w"):
               messagebox.showinfo("History Deleted", "Calculation history deleted successfully")
+              history_window.withdraw()
 
      tk.Button(history_window, text="Delete History", width=10, font=("Arial",11,'bold'), fg='black',bg="#ff0000",relief='ridge', bd=2, 
            padx=10, command=deletehistory).pack(pady=(20,10),anchor='e')
