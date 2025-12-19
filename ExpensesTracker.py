@@ -416,11 +416,11 @@ class ExpensesTracker:
             messagebox.showerror("Error", "Please choose a valid date.")
             return
 
-        if not amount_input:
+        if not amount_input: #no input
             messagebox.showerror("Error", "Please enter a valid amount.")
             return
 
-        try:
+        try: #not number
             amount = float(amount_input)
             if amount <= 0:
                 raise ValueError
@@ -428,16 +428,16 @@ class ExpensesTracker:
             messagebox.showerror("Error", "Please enter a valid amount.")
             return
 
-        if not category_input:
+        if not category_input: #no selection
             messagebox.showerror('Error', 'Please select a category.')
             return
 
-        amount = f"{amount:.2f}"
+        amount = f"{amount:.2f}"  #format to 2 decimal
 
-        ET.data[ET.index] = [date_input, amount, category_input, remark_input]
+        ET.data[ET.index] = [date_input, amount, category_input, remark_input]  #store new data into the file
 
         with open(f'{ET.Username}/expenses_record.csv', 'w', newline='', encoding="utf-8") as file:
-            writer = csv.writer(file)
+            writer = csv.writer(file)  #write all data into file again
             writer.writerows(ET.data)
 
         ET.back_to_mainmenu()
@@ -505,15 +505,15 @@ class ExpensesTracker:
         data = ET.read_expenses()
 
         for row in data:
-            month = datetime.strptime(row[0], "%d/%m/%Y").strftime('%m/%Y')
+            month = datetime.strptime(row[0], "%d/%m/%Y").strftime('%m/%Y')  #get month and year
             pie_data.append([month, row[1], row[2]])
 
-        pie_data.sort(key=lambda row: (datetime.strptime(row[0], "%m/%Y")), reverse=True)
+        pie_data.sort(key=lambda row: (datetime.strptime(row[0], "%m/%Y")), reverse=True)  #sort the data based on month
 
         month = []
-        seen = set()
+        seen = set() #use as a filter
         for row in pie_data:
-            if row[0] not in seen:
+            if row[0] not in seen:  #seen is to filter the month appeared before
                 month.append(row[0])
                 seen.add(row[0])
 
@@ -521,7 +521,6 @@ class ExpensesTracker:
 
     def show_pie_chart(ET,Month):
         #show the statistic using pie chart
-        #selected_month = Month
 
         pie_data, _ = ET.Get_month_data()  #only the data is used in this function
         category_amount = {}
@@ -530,15 +529,16 @@ class ExpensesTracker:
         for widget in ET.pie_frame.winfo_children():
             widget.destroy()
 
-        plt.close('all')
+        plt.close('all') #close all pie chart
 
         for row in pie_data:
             if Month == "All" or row[0] == Month: #If all month is selected, get every row data if no check it is selected month or not
-                category = row[2]
-                amount = float(row[1])
-                category_amount[category] = category_amount.get(category, 0) + amount
+                category = row[2]  #store category
+                amount = float(row[1])  #store amount
+                category_amount[category] = category_amount.get(category, 0) + amount #dictionary that the category is the key
+                #to add the amount of same category together (add the amount in the category and the new amount together)
 
-        if not category_amount:
+        if not category_amount: #If no data
             No_data_label = Label(ET.pie_frame, text="There is no record.", font=('Arial', 15, 'bold'),
                                   fg='#7e9aed', bg='#fcf7ed')
             No_data_label.place(anchor='center', relx=0.5, rely=0.5)
@@ -547,11 +547,11 @@ class ExpensesTracker:
         piechart_label = list(category_amount.keys())
         piechart_sizes = list(category_amount.values())
 
-        fig, ax = plt.subplots(figsize=(4, 4), dpi=100)
+        fig, ax = plt.subplots(figsize=(4, 4), dpi=100)  #generate pie chart data
         ax.pie(piechart_sizes, labels=piechart_label, autopct="%1.1f%%", textprops={'fontsize': 8})
         ax.axis('equal')
 
-        match Month:
+        match Month:  #title
             case "All":
                 ax.set_title("Expenses for All Months")
             case _:
@@ -562,7 +562,7 @@ class ExpensesTracker:
         chart.get_tk_widget().pack(fill='both', expand=True)
 
     def refresh_statistics(ET):
-        for widget in ET.in_frame.winfo_children():
+        for widget in ET.in_frame.winfo_children(): #clear all
             widget.destroy()
 
         MonthCombo_frame = Frame(ET.in_frame,bg='#fcf7ed')
@@ -588,18 +588,10 @@ class ExpensesTracker:
 
         MonthCombo_combobox['values'] = values_combobox
 
-        if ET.select_month and ET.select_month in values_combobox:
+        if ET.select_month and ET.select_month in values_combobox: #show selected month
             MonthCombo_combobox.set(ET.select_month)
             ET.show_pie_chart(ET.select_month)
-        else:
+        else:  #show all month
             MonthCombo_combobox.set("All")
             ET.select_month = "All"
             ET.show_pie_chart(ET.select_month)
-
-
-    #window.mainloop()
-
-
-username = 'tang'
-#main = Tk()
-#ExpensesTracker(username,main)

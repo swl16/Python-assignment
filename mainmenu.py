@@ -91,7 +91,7 @@ def mainmenu(username,login_window):
       menu.destroy()
       loginwindow()
 
-  tk.Label(menu, text=f"Welcome, {username}!", font=("Arial",18,"bold"),bg='#f7f2e9').pack(pady=20)
+  tk.Label(menu, text=f"Welcome, {username.title()}!", font=("Arial",18,"bold"),bg='#f7f2e9').pack(pady=20)
 
   def createbutton(text,command):
     tk.Button(menu, text=text, width=25, height=2, font=("Arial",16), fg='white',bg='#7e9aed', command=command).pack(pady=10)
