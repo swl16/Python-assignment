@@ -1,8 +1,19 @@
 # Python-assignment
 
+External Libraries
+
+INSTALL TKCALENDER AND MATPLOTLIB
+
 * You will need the following external libraries:
 
     pip install tkcalendar matplotlib _(in the terminal)_
+  1. Open the terminal
+  2. type "py -m pip install tkcalendar" (without double quotes) and press "Enter"
+  3. system will download it automatically
+  4. type "py -m pip install matplotlib" (without double quotes) and press "Enter"
+  5. system download it automatically
+  
+  DONE
 
 
 * In **PyCharm**, open Setting then click Interpreter,
@@ -24,4 +35,4 @@
 
     • tax.py 
 
-    • coin.png (Icon file) 
+    • coin.png (Icon file)
