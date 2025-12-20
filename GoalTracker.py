@@ -81,8 +81,8 @@ def calculate_pacing_and_status(goal):
 # --- World Clock Class ---
 
 class WorldClock(ttk.Frame):
-    def _init_(self, master, style_name, *args, **kwargs):
-        super()._init_(master, style=style_name, *args, **kwargs)
+    def __init__(self, master, style_name, *args, **kwargs):
+        super().__init__(master, style=style_name, *args, **kwargs)
         
         self.time_label = ttk.Label(self, 
                                     font=('Arial', 12, 'bold'), 
@@ -118,7 +118,7 @@ class WorldClock(ttk.Frame):
 # --- Tkinter GUI Application Class ---
 
 class GoalTrackerApp:
-    def _init_(self, username, mainmenu):
+    def __init__(self, username, mainmenu):
 
         self.username = username
         self.mainmenu = mainmenu
@@ -479,11 +479,11 @@ class GoalTrackerApp:
 if __name__ == "_main_":
     root = tk.Tk()
     root.withdraw()
-    
+
     class MockMainMenu:
         def deiconify(self): print("Returned to Main Menu (Mock)")
         def withdraw(self): pass
         def destroy(self): root.destroy()
 
     app = GoalTrackerApp("TestUser", MockMainMenu())
-    #root.mainloop()
+    root.mainloop()
