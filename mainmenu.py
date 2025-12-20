@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from tax import taxwindow
+from tax_estimator import taxwindow
 from ExpensesTracker import *
 from GoalTracker import GoalTrackerApp
 
